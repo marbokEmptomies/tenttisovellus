@@ -15,7 +15,8 @@ const Vastaukset = (props) => {
                     }
                 })}
             }}
-            value = {props.vastaus.nimi} />
+            //value = {props.vastaus.nimi} 
+            />
         </div>
     )
 }

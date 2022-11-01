@@ -17,19 +17,19 @@ const Tentti = (props) => {
                         }
                     })
                 }}
-                value = {props.tentti.nimi} />
+                //value = {props.tentti.nimi} 
+                />
 
             <div>
-                <div>Kysymykset: </div>
-                    <div>
-                        {props.tentti.kysymykset.map((kysymys, index) =>
-                        <Kysymykset 
-                            dispatch={props.dispatch} 
-                            tenttiIndex = {props.tenttiIndex} 
-                            kysymysIndex = {index}
-                            kysymys = {kysymys}
-                        />)} 
-                    </div>
+                <div>
+                    {props.tentti.kysymykset.map((kysymys, index) =>
+                    <Kysymykset 
+                        dispatch={props.dispatch} 
+                        tenttiIndex = {props.tenttiIndex} 
+                        kysymysIndex = {index}
+                        kysymys = {kysymys}
+                    />)} 
+                </div>
             </div>
         </>
     )       
