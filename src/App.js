@@ -57,6 +57,11 @@ const reducer = (state, action) => {
       return {...state, tentit:[...state.tentit, {nimi: "Uusi tentti", id: uusiId, kysymykset: []}]}
     }
 
+    case 'LISÄÄ_KYSYMYS': {
+      console.log("Lisää kysymys muuttui", action)
+      return {...state, tentit:[...state.tentit.kysymykset, {nimi: "Uusi kysymys", vastaukset: []}]}
+    }
+
     case 'POISTA_TENTTI': {
       console.log("Poista tentti muuttui", action)
       const uudetTentit = state.tentit.filter(item => action.payload.id !== item.id)

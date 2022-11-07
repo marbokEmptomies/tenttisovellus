@@ -19,7 +19,6 @@ const Tentti = (props) => {
                 }}
                 //value = {props.tentti.nimi} 
                 />
-
             <div>
                 <div>
                     {props.tentti.kysymykset.map((kysymys, index) =>
