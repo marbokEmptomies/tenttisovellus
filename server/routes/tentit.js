@@ -12,4 +12,15 @@ router.get('/', async (req, res) => {
     }
 })
 
+router.post('/', async (req, res) => {
+    try {
+        const text = 'INSERT INTO tentti (nimi) VALUES ($1)'
+        const values = ['Jorman käyttöohje']
+        db.query(text, values)
+        res.send("pelittää")
+    } catch (error) {
+        console.log("Ei pelitä", error)
+    }
+})
+
 module.exports = router
