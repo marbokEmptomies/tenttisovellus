@@ -13,14 +13,29 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
+    const { tentti_id, nimi, pisteet } = req.body
+    const client = await db.connect()
+    
     try {
-        const { nimi, pisteet } = req.body
-        const values = [ nimi, pisteet ]
-        const text = 'INSERT INTO kysymys (nimi, pisteet) VALUES ($1, $2)'
-        await db.query(text, values)
-        res.send("Uusi kysymys lisätty")
+        const queryKys = 'INSERT INTO kysymys (tentti_id, nimi, pisteet) VALUES ($1, $2, $3) RETURNING id'
+        const result = await client.query(queryKys, [tentti_id, nimi, pisteet])
+        res.send(`Uusi kysymys lisätty tenttiin ID:llä ${tentti_id}. Kysymyksen id on ${result.rows[0].id}`)
     } catch (error) {
         console.log("Kysymyksen lisäys epäonnistui", error.stack)
+    } finally {
+        client.release()
+    }
+})
+
+router.put('/:id', async (req, res) => {
+    try {
+        const { uusiTentti_id, uusiNimi, uusiPisteet } = req.body
+        const text = 'UPDATE kysymys SET tentti_id = ($1), nimi = ($2), pisteet = ($3) WHERE id = ($4)'
+        console.log(req.body)
+        await db.query(text, [uusiTentti_id, uusiNimi, uusiPisteet, req.params.id])
+        res.send(`Kysymys muutettu ID:llä ${req.params.id}. Tentin ID: ${uusiTentti_id}`)   
+    } catch (error) {
+        console.log("Kysymyksen muokkaamisessa virhe ", error.stack)    
     }
 })
 
