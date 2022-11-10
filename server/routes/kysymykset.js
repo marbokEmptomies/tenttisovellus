@@ -10,18 +10,29 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.log("Kysymyshaussa virhe", error.stack)
     }
-    //db.end()
 })
 
 router.post('/', async (req, res) => {
     try {
-        const uusiKysymys = ['Milloin on nyt?']
-        const text = 'INSERT INTO kysymys (nimi) VALUES ($1)'
-        await db.query(text, uusiKysymys)
+        const { nimi, pisteet } = req.body
+        const values = [ nimi, pisteet ]
+        const text = 'INSERT INTO kysymys (nimi, pisteet) VALUES ($1, $2)'
+        await db.query(text, values)
         res.send("Uusi kysymys lisätty")
     } catch (error) {
         console.log("Kysymyksen lisäys epäonnistui", error.stack)
     }
 })
+
+router.delete('/:id'), async (req, res) => {
+    try {
+        const text = 'DELETE FROM kysymys WHERE id=($1)'
+        const values = [req.params.id]
+        await db.query(text, values)
+        res.send(`Kysymys ID:llä ${req.params.id} poistettu`)
+    } catch (error) {
+        console.log("Kysymyksen poistaminen epäonnistui", error.stack)
+    }
+}
 
 module.exports = router

@@ -14,7 +14,8 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        const values = ['Kaleviina Hersonen', 'devilgirl666@satan.com', 'true']
+        const { nimi, email, onkoadmin } = req.body
+        const values = [ nimi, email, onkoadmin ]
         const text = 'INSERT INTO käyttäjä (nimi, email, onkoadmin) VALUES ($1, $2, $3)'
         await db.query(text, values)
         res.send("pelittää")
@@ -35,13 +36,11 @@ router.delete('/:id', async(req, res) => {
 })
 
 router.put('/:id', async(req, res) => {
-    const uusiNimi = 'Neuman Uusimies'
-    const uusiEmail = 'uusiemail@uusi.com'
-    const uusiAdmin = 'false'
     try {
+        const {uusiNimi, uusiEmail, uusiAdmin} = req.body
         const text = 'UPDATE käyttäjä SET nimi = ($1), email = ($2), onkoadmin = ($3) WHERE id = ($4)'
-        const values = [uusiNimi, uusiEmail, uusiAdmin, req.params.id]
-        await db.query(text, values)
+        console.log(uusiNimi)
+        await db.query(text, [uusiNimi, uusiEmail, uusiAdmin, req.params.id])
         res.send(`Käyttäjän tiedot ID:llä ${req.params.id} päivitettiin`)
     } catch (error) {
         console.log("Virhe tietojen päivittämisessä", error.stack)

@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
 
-const port = process.env.PORT || 3001 // app osaa hakea oikean portin palveluntarjoajalta. Tutki aihetta lisää, huara. <- note to self
+const port = process.env.PORT || 3001 // app osaa hakea oikean portin palveluntarjoajalta. <- note to self
 
 //route imports
 const tenttiRoute = require('./routes/tentit')
