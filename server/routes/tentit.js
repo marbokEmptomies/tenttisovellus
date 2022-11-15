@@ -49,9 +49,9 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const { nimi } = req.body
-        const text = 'INSERT INTO tentti (nimi) VALUES ($1)'
-        const values = [nimi]
+        const { nimi, päivämäärä, onkovoimassa } = req.body
+        const text = 'INSERT INTO tentti (nimi, päivämäärä, onkovoimassa) VALUES ($1, $2, $3)'
+        const values = [nimi, päivämäärä, onkovoimassa]
         db.query(text, values)
         res.status(200).send("Uusi tentti lisätty.")
     } catch (error) {
@@ -62,10 +62,10 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        const { nimi } = req.body
+        const { uusiNimi, uusiPvm, uusiVoimassa } = req.body
         const { id } = req.params
-        const text = 'UPDATE tentti SET nimi = ($1) WHERE id = ($2)'
-        const values = [nimi, id]
+        const text = 'UPDATE tentti SET nimi = ($1), päivämäärä = ($2), onkovoimassa = ($3) WHERE id = ($4)'
+        const values = [uusiNimi, uusiPvm, uusiVoimassa, id]
         await db.query(text, values)
         res.status(201).send(`Tentti ID:llä ${req.params.id} muokattu.`)
     } catch (error) {
