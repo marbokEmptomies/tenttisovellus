@@ -9,6 +9,7 @@ const port = process.env.PORT || 3001 // app osaa hakea oikean portin palvelunta
 const tenttiRoute = require('./routes/tentit')
 const kysymysRoute = require('./routes/kysymykset')
 const kayttajaRoute = require('./routes/kayttajat')
+const vastausRoute = require('./routes/vastausvaihtoehdot')
 
 app.use(express.json())
 app.use(cors())
@@ -17,6 +18,7 @@ app.use(morgan('tiny'))
 app.use('/tentit', tenttiRoute)
 app.use('/kysymykset', kysymysRoute)
 app.use('/kayttajat', kayttajaRoute)
+app.use('/vastausvaihtoehsot', vastausRoute)
 
 app.get('/', (req, res) => {
     res.send('Root route')
