@@ -2,6 +2,22 @@ const express = require('express')
 const router = express.Router()
 const db = require('../database')
 
+//TOKEN:
+/* 
+-POST-komennolla kt ja ss frontista eteenpäin
+-Sign-up
+-Autentikointi (kt, ss), auktorisointi 
+-Token, verify
+-Ei tarvii joka kerta lähettää uudestaan kt ja ss, vaan pelataan tokeneilla.
+-Fronttiin login-sivu
+-Token: 
+    *JWT-kirjasto (määritellään jokin voimassaoloaika)
+    *Header, payload, signature
+    *Header (data1), payload (data2), secret -> signature
+    *Välitetään palvelimelle http-pyynnön header-osassa (authorization: bearer TOKEN) <- split <- 1-alkiossa itse TOKEN
+    *Token "elää" selaimen local_storagessa session ajan, tuhoutuu käyttäjän kirjautessa ulos
+*/
+
 router.get('/', async(req, res) => {
     try {
         const result = 'SELECT * FROM käyttäjä ORDER BY id ASC'
@@ -15,9 +31,9 @@ router.get('/', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        const { nimi, email, onkoadmin } = req.body
-        const values = [ nimi, email, onkoadmin ]
-        const text = 'INSERT INTO käyttäjä (nimi, email, onkoadmin) VALUES ($1, $2, $3)'
+        const { nimi, email, onkoadmin, salasana } = req.body
+        const values = [ nimi, email, onkoadmin, salasana ]
+        const text = 'INSERT INTO käyttäjä (nimi, email, onkoadmin, salasana) VALUES ($1, $2, $3, $4)'
         await db.query(text, values)
         res.status(200).send("Käyttäjä lisätty.")
     } catch (error) {
