@@ -32,7 +32,7 @@ router.post('/', async (req, res, next) => {
     try {
     //Creating jwt token
         token = jwt.sign(
-            { id: existingUser.id, email: existingUser.email },
+            { id: existingUser.id, email: existingUser.email, isadmin: existingUser.isadmin },
             "secretkeyappearshere",    //.env
             { expiresIn: "1h" }
         );

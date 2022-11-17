@@ -21,12 +21,12 @@ const saltRounds = 10;
 
 // Signup
 app.post('/signup', async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password, name, isadmin } = req.body;
     let result; 
     try {
         let hashed = await bcrypt.hash(password, saltRounds)
         result = await db.query(
-            "INSERT INTO käyttäjä (email, password) VALUES ($1,$2) RETURNING id", [email, hashed]);
+            "INSERT INTO käyttäjä (email, password, name, isadmin) VALUES ($1,$2, $3, $4) RETURNING id", [email, hashed, name, isadmin]);
     } catch (error) {
         console.error(error);
         return next();
@@ -34,7 +34,7 @@ app.post('/signup', async (req, res, next) => {
     let token;
     try {
         token = jwt.sign(
-            { id: result.rows[0].id, email: email },
+            { id: result.rows[0].id, email: email, isadmin: isadmin },
             "secretkeyappearshere",
             { expiresIn: "1h" }
         );
@@ -69,7 +69,7 @@ app.use('/login', loginRoute)
 app.use('/tentit', verifyToken, tenttiRoute)
 app.use('/kysymykset', verifyToken, kysymysRoute)
 app.use('/kayttajat', verifyToken, kayttajaRoute)
-app.use('/vastausvaihtoehsot', verifyToken, vastausRoute)
+app.use('/vastausvaihtoehdot', verifyToken, vastausRoute)
 
 app.get('/', (req, res) => {
     res.send('Root route')
