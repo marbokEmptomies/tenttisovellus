@@ -6,9 +6,9 @@ const Tentti = (props) => {
     return (
         <>
             <div>
-                <h1>Tentin nimi: {props.tentti.nimi}</h1>
+                <h1>Tentin nimi: {props.tentti.tentti?.nimi}</h1>
             </div>
-                <input type="text" onChange={(event) => {
+                {/* <input type="text" onChange={(event) => {
                     props.dispatch({
                         type: 'TENTIN_NIMI_MUUTTUI',
                         payload: {
@@ -18,16 +18,15 @@ const Tentti = (props) => {
                     })
                 }}
                 //value = {props.tentti.nimi} 
-                />
+                /> */}
             <div>
                 <div>
-                    {/* {props.tentti.kysymykset.map((kysymys, index) =>
+                    {props.tentti.kysymykset?.map((kysymykset) =>
                     <Kysymykset 
-                        dispatch={props.dispatch} 
-                        tenttiIndex = {props.tenttiIndex} 
-                        kysymysIndex = {index}
-                        kysymys = {kysymys}
-                    />)}  */}
+                        dispatch={props.dispatch}  
+                        kysymykset = {kysymykset}
+                        vastaukset = {props.tentti.vastaukset}
+                    />)} 
                 </div>
             </div>
         </>
