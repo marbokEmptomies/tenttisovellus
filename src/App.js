@@ -74,7 +74,13 @@ const reducer = (state, action) => {
     }
 
     case 'ALUSTA_DATA': {
-      return {...action.payload, tietoAlustettu: true}
+      console.log("Alusta data: ", action.payload)
+      return action.payload
+    }
+
+    case 'KOTTIKÄRRYT': {
+      console.log("Tentti haettu id:n perusteella", action)
+      return action.payload
     }
 
     default:
@@ -85,21 +91,31 @@ const reducer = (state, action) => {
 function App() {
 
   const [tentitLista, dispatch] = useReducer(reducer, appData)
-  const [valittuTentti, setValittuTentti] = useState(0)
+  //const [valittuTentti, setValittuTentti] = useState(0)
+  
+  const haeTenttiById = async(event) => {
+    try {
+        const { value: tentti_id } = event.target
+        const result = await axios.get(`http://localhost:3001/tentit/${tentti_id}`)
+        dispatch({
+          type: 'KOTTIKÄRRYT',
+          payload: result.data
+        })
+    }catch(error) {
+        console.log("Virhe tentin haussa.", error)
+    }
+  }
 
-  const tenttiNapit = tentitLista.tentit.map((item, index) => {
+  const tenttiNapit = tentitLista.length > 0 && tentitLista.map((item, index) => {
     return (
-      <button value={index} onClick={(event) => {
-        setValittuTentti(event.target.value)
-      }}>{item.nimi}</button>
+      <button value={item.id} onClick={haeTenttiById}>{item.nimi}</button>
     )
   })
 
   useEffect(() => {
     const haeDataa = async() => {
       try {
-        const result = await axios.get('http://localhost:8080')
-        console.log(result)
+        const result = await axios.get('http://localhost:3001/tentit')
         dispatch({
           type: 'ALUSTA_DATA',
           payload: result.data
@@ -136,22 +152,21 @@ function App() {
           payload: true
         })}>Tallenna muutokset</button>
         {tenttiNapit}
-        {tentitLista.tentit[valittuTentti] ? 
+        {tentitLista ? 
         <Tentti 
-          tenttiIndex={valittuTentti}
-          tentti={tentitLista.tentit[valittuTentti]}
+          tentti={tentitLista}
           dispatch={dispatch}
         /> : <h1>Ei tenttejä valittuna</h1>}
         
       </div>
       <div>
-        <button onClick={() => dispatch({
+        {/* <button onClick={() => dispatch({
           type: 'LISÄÄ_TENTTI'
         })}>Lisää uusi tentti</button>
         <button onClick={() => dispatch({
           type: 'POISTA_TENTTI',
           payload: tentitLista.tentit[valittuTentti]
-        })}>Poista tentti</button>
+        })}>Poista tentti</button> */}
     </div>
     </>
   )

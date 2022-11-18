@@ -21,13 +21,13 @@ const Tentti = (props) => {
                 />
             <div>
                 <div>
-                    {props.tentti.kysymykset.map((kysymys, index) =>
+                    {/* {props.tentti.kysymykset.map((kysymys, index) =>
                     <Kysymykset 
                         dispatch={props.dispatch} 
                         tenttiIndex = {props.tenttiIndex} 
                         kysymysIndex = {index}
                         kysymys = {kysymys}
-                    />)} 
+                    />)}  */}
                 </div>
             </div>
         </>

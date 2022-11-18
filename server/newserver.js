@@ -66,10 +66,12 @@ const kayttajaRoute = require('./routes/kayttajat')
 const vastausRoute = require('./routes/vastausvaihtoehdot')
 
 app.use('/login', loginRoute)
-app.use('/tentit', verifyToken, tenttiRoute)
-app.use('/kysymykset', verifyToken, kysymysRoute)
-app.use('/kayttajat', verifyToken, kayttajaRoute)
-app.use('/vastausvaihtoehdot', verifyToken, vastausRoute)
+app.use('/tentit', tenttiRoute)
+app.use('/kysymykset', kysymysRoute)
+app.use('/kayttajat', kayttajaRoute)
+app.use('/vastausvaihtoehdot', vastausRoute)
+
+//muista lisätä verifyToken paikkoihin, jotka suljetaan!
 
 app.get('/', (req, res) => {
     res.send('Root route')

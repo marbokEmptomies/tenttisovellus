@@ -33,6 +33,7 @@ router.get('/:id', async (req, res) => {
       const haeVastaus =
         'SELECT * FROM vastausvaihtoehto WHERE kysymys_id IN (SELECT kysymys_id FROM kysymys_tentti_liitos WHERE kysymys_id = (kysymys_id))';
       const { rows: vastausData } = await db.query(haeVastaus);
+      console.log(vastausData)
   
       const tenttiObj = {
         tentti: { ...tenttiData[0] },
@@ -47,6 +48,7 @@ router.get('/:id', async (req, res) => {
     }
   });
 
+//Lisää tentti
 router.post('/', async (req, res) => {
     try {
         const { nimi, päivämäärä, onkovoimassa } = req.body
@@ -60,6 +62,7 @@ router.post('/', async (req, res) => {
     }
 })
 
+//Muokkaa tenttiä id:n perusteella
 router.put('/:id', async (req, res) => {
     try {
         const { uusiNimi, uusiPvm, uusiVoimassa } = req.body
@@ -74,6 +77,8 @@ router.put('/:id', async (req, res) => {
     }
 })
 
+
+//Poista tentti id:n perusteella
 router.delete('/:id', async (req, res) => {
     try {
         const text = 'DELETE FROM tentti WHERE id=($1)'
