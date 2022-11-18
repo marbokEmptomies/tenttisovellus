@@ -30,7 +30,7 @@ const appData = {
 
 const reducer = (state, action) => {
   switch(action.type) {
-    case 'TENTIN_NIMI_MUUTTUI': {
+    /* case 'TENTIN_NIMI_MUUTTUI': {
       console.log("Tentin nimi muuttui ", action)
       const stateKopio = {...state}
       stateKopio.tentit[action.payload.tenttiIndex].nimi = action.payload.nimi
@@ -71,7 +71,7 @@ const reducer = (state, action) => {
     case 'PÄIVITÄ_TALLENNUSTILA': {
       console.log("Tallennustila päivitetty", action)
       return {...state, tallennetaanko: action.payload}
-    }
+    } */
 
     case 'ALUSTA_DATA': {
       console.log("Alusta data: ", action.payload)
@@ -96,7 +96,8 @@ function App() {
   const haeTenttiById = async(event) => {
     try {
         const { value: tentti_id } = event.target
-        const result = await axios.get(`http://localhost:3001/tentit/${tentti_id}`)
+        const result = await axios.get(`https://localhost:4000/tentit/${tentti_id}`)
+        console.log(result.data)
         dispatch({
           type: 'KOTTIKÄRRYT',
           payload: result.data
@@ -115,7 +116,8 @@ function App() {
   useEffect(() => {
     const haeDataa = async() => {
       try {
-        const result = await axios.get('http://localhost:3001/tentit')
+        const result = await axios.get('https://localhost:4000/tentit')
+        console.log(result.data)
         dispatch({
           type: 'ALUSTA_DATA',
           payload: result.data
@@ -127,10 +129,10 @@ function App() {
     haeDataa()
   }, [])
 
-  useEffect(() => {
+  /* useEffect(() => {
     const vieDataa = async() => {
       try {
-        await axios.post('http://localhost:8080', tentitLista)
+        await axios.post('https://localhost:4000', tentitLista)
         dispatch({
           type: 'PÄIVITÄ_TALLENNUSTILA',
           payload: false
@@ -142,17 +144,17 @@ function App() {
     if(tentitLista.tallennetaanko === true){
       vieDataa()
     }
-  }, [tentitLista.tallennetaanko])
+  }, [tentitLista.tallennetaanko]) */
 
   return (
     <>
       <div>
-        <button onClick={() => dispatch({
+        {/* <button onClick={() => dispatch({
           type: 'PÄIVITÄ_TALLENNUSTILA',
           payload: true
-        })}>Tallenna muutokset</button>
+        })}>Tallenna muutokset</button> */}
         {tenttiNapit}
-        {tentitLista ? 
+        {Object.keys(tentitLista).length > 0 ? 
         <Tentti 
           tentti={tentitLista}
           dispatch={dispatch}
