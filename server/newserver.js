@@ -5,6 +5,9 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser');
 const db = require('./database')
 const { verifyToken } = require('./middlewares/verifyToken')
+const https = require('https')
+const fs = require('fs')
+const nodemailer = require('nodemailer')
 
 
 app.use(express.json())
@@ -13,11 +16,12 @@ app.use(morgan('tiny'))
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true, }));
-const port = process.env.PORT || 3001 // app osaa hakea oikean portin palveluntarjoajalta. <- note to self
+const port = process.env.PORT || 4000 // app osaa hakea oikean portin palveluntarjoajalta. <- note to self
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+
 
 // Signup
 app.post('/signup', async (req, res, next) => {
@@ -55,7 +59,7 @@ app.post('/signup', async (req, res, next) => {
 app.get('/', (req, res) => {
     console.log(req.decoded)
     console.log("Palvelimeen tultiin kyselemään dataa")
-    res.send("Nyt ollaan palvelussa, joka edellyttää kirjautumisen")
+    res.send("Toot toot motherfucker!")
 });
 
 //route imports
@@ -77,4 +81,40 @@ app.get('/', (req, res) => {
     res.send('Root route')
 })
 
-app.listen(port, () => console.log(`Server listening on port: ${port}`))
+
+//nodemailer-testing 18.11.2022 <- don't twist your balls on this
+/* let transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'markosoramaki@gmail.com',
+        pass: 'mpgpfuhxqleqgtwo'
+    }
+})
+
+let mailOptions =  {
+    from: 'markosoramaki@gmail.com',
+    to: 'juvuorin@gmail.com',
+    subject: 'Noden kautta nasahtaa',
+    text: 'Helppoo ku sika pienenä.'
+}
+
+transporter.sendMail(mailOptions, function(error, info) {
+    if(error) {
+        console.log("Ei pysty lähettämään, ei millään, koska ", error)
+    }else{
+        console.log("Lähetys onnistui: ", info.response)
+    }
+}) */
+
+//SSL
+https
+    .createServer(
+        {
+            key: fs.readFileSync("./cert/key.pem"),
+            cert: fs.readFileSync("./cert/cert.pem"),
+        },
+        app
+    )
+        .listen(4000, () => {
+        console.log(`server running at port ${port}`)
+})
