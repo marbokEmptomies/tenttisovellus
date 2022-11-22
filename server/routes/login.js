@@ -19,7 +19,7 @@ router.post('/', async (req, res, next) => {
         };
         passwordMatch = await bcrypt.compare(password, existingUser.password)
     } catch {
-        console.error(error);
+        console.log(error);
         return next();
     }
 
@@ -32,7 +32,7 @@ router.post('/', async (req, res, next) => {
     try {
     //Creating jwt token
         token = jwt.sign(
-            { id: existingUser.id, email: existingUser.email, isadmin: existingUser.isadmin },
+            { id: existingUser.id, email: existingUser.email },
             "secretkeyappearshere",    //.env
             { expiresIn: "1h" }
         );
@@ -43,7 +43,7 @@ router.post('/', async (req, res, next) => {
  
     res.status(200).json({
         success: true,
-        data: {
+        käyttäjä: {
         id: existingUser.id,
         email: existingUser.email,
         token: token,

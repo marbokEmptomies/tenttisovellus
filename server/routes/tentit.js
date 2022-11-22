@@ -3,6 +3,8 @@ const express = require('express')
 const { reset } = require('nodemon')
 const router = express.Router()
 const db = require('../database')
+const admin = require('../middlewares/admin')
+const verifyToken = require('../middlewares/verifyToken')
 
 //Hae kaikki tentit db:stä
 router.get('/', async (req, res) => {
@@ -49,7 +51,7 @@ router.get('/:id', async (req, res) => {
   });
 
 //Lisää tentti
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, admin, async (req, res) => {
     try {
         const { nimi, päivämäärä, onkovoimassa } = req.body
         const text = 'INSERT INTO tentti (nimi, päivämäärä, onkovoimassa) VALUES ($1, $2, $3)'
