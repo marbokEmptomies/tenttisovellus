@@ -1,16 +1,49 @@
-.keijo {
-  background-color: pink;
-  padding: 1rem;
+body {
+  margin: 0;
+  padding: 0;
+  background-color: bisque;
 }
 
-.reijo {
-  display: block;
-  background-color: greenyellow;
-  padding: 1rem;
+.form-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
 }
 
-.princessdiana {
-  display: block;
-  background-color: rgb(243, 6, 179);
-  padding: 1rem;
+.form-container label {
+  display: flex;
+  max-width: 10rem;
+}
+
+.form-container button {
+  display: flex;
+  margin-top: 0.3rem;
+}
+
+.nav {
+  display: flex;
+  background-color: rgb(141, 195, 195);
+  padding: 0;
+  box-shadow: 0 0.1rem 0.1rem 0.2rem rgba(9, 9, 9, 0.23);
+}
+
+.nav ul {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-right: 10rem;
+  padding: 0.5rem;
+}
+
+.nav li {
+  display: flex;
+  margin-left: 1.3rem;
+  padding: 0.3rem;
+  font-weight: bold;
+  list-style: none;
+}
+
+.main-container {
+  background-color: inherit;
+  margin-left: 4rem;
 }

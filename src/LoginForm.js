@@ -76,7 +76,7 @@ const LoginForm = (props) => {
   };
 
   return (
-    <div className="reijo">
+    <div className="form-container">
         <form onSubmit={handleLogin}>
           <h1>Kirjaudu:</h1>
           <label htmlFor="email">Sähköpostiosoite:</label>
@@ -99,7 +99,7 @@ const LoginForm = (props) => {
         </form>
 
       <form onSubmit={handleRegister}>
-        <h1>Rekisteröidy</h1>
+        <h1>Rekisteröidy:</h1>
         <label htmlFor="nimi">Nimi:</label>
         <input
           required
@@ -134,10 +134,6 @@ const LoginForm = (props) => {
         />
         <button>Rekisteröidy</button>
       </form>
-      {/* <Routes>
-        <Route path="/app" element={<App />}>
-        </Route>
-    </Routes> */}
     </div>
   );
 };

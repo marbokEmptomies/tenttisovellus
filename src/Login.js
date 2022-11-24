@@ -1,16 +1,14 @@
 import { useState } from "react";
-import { Link, Routes, Route } from "react-router-dom";
-import axios from "axios";
 import App from "./App";
 import LoginForm from "./LoginForm";
 
 import "./index.css";
 
 const Login = () => {
-    const [token, setToken ] = useState(localStorage.getItem('tenttisov_token'))
-    const handleTokenChange = (token) => {
-      setToken(token)
-    }
+  const [token, setToken] = useState(localStorage.getItem("tenttisov_token"));
+  const handleTokenChange = (token) => {
+    setToken(token);
+  };
 
   let component;
 
@@ -21,12 +19,22 @@ const Login = () => {
     case "/App":
       component = <App />;
       break;
+    default:
+      console.log("Go away.");
   }
 
   //tarkistetaan localStoragesta token
-  const validToken = token
+  const validToken = token;
 
-  return <div className="keijo">{validToken ? <App /> : <LoginForm handleTokenChange={handleTokenChange}/>}</div>;
+  return (
+    <div>
+      {validToken ? (
+        <App />
+      ) : (
+        <LoginForm handleTokenChange={handleTokenChange} />
+      )}
+    </div>
+  );
 };
 
 export default Login;
