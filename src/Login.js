@@ -29,7 +29,7 @@ const Login = () => {
   return (
     <div>
       {validToken ? (
-        <App />
+        <App handleTokenChange={handleTokenChange}/>
       ) : (
         <LoginForm handleTokenChange={handleTokenChange} />
       )}

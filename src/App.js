@@ -4,10 +4,10 @@ import axios from "axios";
 import NavBar from "./NavBar";
 import MainContent from "./MainContent";
 
-const App = () => {
+const App = (props) => {
   return (
     <>
-        <NavBar /> 
+        <NavBar handleTokenChange={props.handleTokenChange}/> 
         <MainContent />   
     </>
   );

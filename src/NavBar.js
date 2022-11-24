@@ -3,9 +3,9 @@ import { Link, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 const NavBar = (props) => {
-  const signOut = (token) => {
+  const signOut = () => {
     localStorage.removeItem("tenttisov_token");
-    props.handleTokenChange(token)
+    props.handleTokenChange(null)
   };
 
   return (
