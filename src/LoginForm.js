@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
 import "./index.css";
@@ -41,6 +40,7 @@ const LoginForm = (props) => {
 
       if (data.käyttäjä.token) {
         localStorage.setItem("tenttisov_token", data.käyttäjä.token);
+        localStorage.setItem("tenttisov_käyttäjä", data.käyttäjä.name);
         props.handleTokenChange(() => data.käyttäjä.token);
       }
     } catch (error) {
@@ -86,6 +86,7 @@ const LoginForm = (props) => {
             type="email"
             name="email"
             value={login.email}
+            placeholder="Anna sähköpostiosoite."
           />
           <label htmlFor="password">Salasana:</label>
           <input
@@ -94,6 +95,7 @@ const LoginForm = (props) => {
             type="password"
             name="password"
             value={login.password}
+            placeholder="Anna salasana."
           />
             <button>Kirjaudu</button>
         </form>
@@ -107,6 +109,7 @@ const LoginForm = (props) => {
           type="text"
           name="nimi"
           value={register.name}
+          placeholder="Anna nimesi."
         />
         <label htmlFor="email">Sähköpostiosoite:</label>
         <input
@@ -115,6 +118,7 @@ const LoginForm = (props) => {
           type="email"
           name="email"
           value={register.email}
+          placeholder="Anna sähköpostiosoitteesi."
         />
         <label htmlFor="password">Salasana:</label>
         <input
@@ -123,6 +127,7 @@ const LoginForm = (props) => {
           type="password"
           name="password"
           value={register.password}
+          placeholder="Anna salasana."
         />
         <label htmlFor="password">Salasana uudelleen:</label>
         <input
@@ -131,6 +136,7 @@ const LoginForm = (props) => {
           type="password"
           name="passwordAgain"
           value={register.passwordAgain}
+          placeholder="Anna salasana uudelleen."
         />
         <button>Rekisteröidy</button>
       </form>

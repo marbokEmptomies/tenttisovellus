@@ -4,7 +4,7 @@ import Vastaukset from './Vastaukset'
 const Kysymykset = (props) => {
     return (
         <>
-            <div>Kysymykset: {props.kysymykset.nimi}</div>
+            <div><h3>Kysymykset: {props.kysymykset}</h3></div>
                 {/* <input type="text" onChange={(event) => {
                     props.dispatch({
                         type: 'KYSYMYKSEN_NIMI_MUUTTUI',
@@ -14,11 +14,9 @@ const Kysymykset = (props) => {
                     })
                 }} /> */}
             <div>
-                <div>{props.kysymykset.vastaukset?.map((vastaukset) =>
-                <Vastaukset 
-                    dispatch={props.dispatch}
-                    vastaukset={props.kysymykset.vastaukset}
-                />)}
+                <div>
+                    <h4>Vastausvaihtoehdot:</h4>
+                    <p>{props.vastaukset}</p>
                 </div>
             </div>
         </>

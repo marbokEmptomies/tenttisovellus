@@ -15,6 +15,7 @@ router.post("/", async (req, res, next) => {
       email,
     ]);
     existingUser = {
+      name: result.rows[0].name,
       password: result.rows[0].password,
       email: result.rows[0].email,
       id: result.rows[0].id,
@@ -48,6 +49,7 @@ router.post("/", async (req, res, next) => {
     käyttäjä: {
       id: existingUser.id,
       email: existingUser.email,
+      name: existingUser.name,
       token: token,
     },
   });
