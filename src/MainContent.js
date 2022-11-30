@@ -21,18 +21,31 @@ const MainContent = (props) => {
     }
   }, [props.data.valittuTentti]);
 
-  const kysymykset = props.data.haettuTentti?.kysymykset;
+  // const kysymyksetIlmanReturnia = props.data.haettuTentti?.kysymykset.map(item => <Kysymykset key={item.id} />);
 
-  const vastaukset = props.data.haettuTentti?.vastaukset;
+  // const kysymyksetIlmanReturniaBodylla = props.data.haettuTentti?.kysymykset.map(item => (
+  //   <div>
+  //     <p>item.id</p>
+  //   </div>
+  // ));
 
-  /* const vastaukset = props.data.haettuTentti?.vastaukset.map(
-    (item) => item.nimi
-  ); */
+  const kysymykset = props.data.haettuTentti?.kysymykset.map((item) => {
+    return (
+      <Kysymykset
+        key={item.id}
+        kysymyksen_id={item.id}
+        nimi={item.nimi}
+        pisteet={item.pisteet}
+        vastaukset={props.data.haettuTentti?.vastaukset}
+      />
+    );
+  });
 
   return (
     <div className="main-container">
-      <h1>{props.data.haettuTentti?.tentti.nimi}</h1>
-      <Kysymykset kysymykset={kysymykset} vastaukset={vastaukset} />
+      <div className="tentti-nimi">{props.data.haettuTentti?.tentti.nimi}</div>
+      {kysymykset}
+      {/* <h3><Kysymykset kysymykset={kysymykset} vastaukset={props.data.haettuTentti?.vastaukset}/></h3> */}
     </div>
   );
 };

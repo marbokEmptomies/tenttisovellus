@@ -45,5 +45,27 @@ body {
 
 .main-container {
   background-color: inherit;
-  margin-left: 4rem;
+  padding: 0;
+  margin: 0;
+}
+
+.tentti-nimi {
+  display: flex;
+  font-size: 2.2rem;
+  font-weight: bold;
+  background-color: inherit;
+  box-shadow: 10px 5px 5px rgb(255, 213, 161);
+  justify-content: center;
+}
+
+.kysymys-container {
+  display: block;
+  justify-content: center;
+  background-color: inherit;
+  margin-left: 38rem;
+  width: 25%;
+}
+
+.vvnimi {
+  padding: 0.3rem;
 }
