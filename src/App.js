@@ -4,11 +4,24 @@ import axios from "axios";
 import NavBar from "./NavBar";
 import MainContent from "./MainContent";
 
+
+const appData = {
+    tenttiLista: [], 
+    valittuTentti:"",
+    tallennetaanko: "false",
+    onkoadmin: "false"
+}
+
 const reducer = (state, action) => {
   switch (action.type) {
     case "ALUSTA_DATA": {
       console.log("Alusta data: ", action.payload);
       return { tenttiLista: action.payload };
+    }
+
+    case "PÄIVITÄ_TALLENNUSTILA": {
+        console.log("Tallennus tapahtui:", action.payload)
+        return {...state, tallennetaanko: action.payload}
     }
 
     case "VALITSE_TENTTI": {
@@ -21,13 +34,21 @@ const reducer = (state, action) => {
         return {...state, haettuTentti: action.payload}
     }
 
+    case "LISÄÄ_TENTTI": {
+        console.log("Lisätään tentti", action.payload)
+    }
+
+    case "POISTA_TENTTI": {
+        console.log("Poistetaan tentti", action.payload)
+    }
+
     default:
       throw new Error("Reducer error...");
   }
 };
 
 const App = (props) => {
-  const [tentitLista, dispatch] = useReducer(reducer, {tenttiLista: [], valittuTentti:""});
+  const [tentitLista, dispatch] = useReducer(reducer, appData);
   console.log(tentitLista);
 
   useEffect(() => {
@@ -45,6 +66,23 @@ const App = (props) => {
     };
     haeDataa();
   }, []);
+
+  useEffect(() => {
+    const vieDataa = async() => {
+      try {
+        await axios.post('https://localhost:4000/tentit', tentitLista)
+        dispatch({
+          type: 'PÄIVITÄ_TALLENNUSTILA',
+          payload: false
+        })
+      } catch (error) {
+        console.log("virhetilanne", error)
+      }
+    }
+    if(tentitLista.tallennetaanko === true){
+      vieDataa()
+    }
+  }, [tentitLista.tallennetaanko])
 
   return (
     <>

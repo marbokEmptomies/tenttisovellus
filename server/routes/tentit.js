@@ -46,7 +46,7 @@ router.get("/:id", async (req, res) => {
 });
 
 //Lisää tentti
-router.post("/", verifyToken, admin, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { nimi, päivämäärä, onkovoimassa } = req.body;
     const text =

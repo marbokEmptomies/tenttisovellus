@@ -45,7 +45,20 @@ const MainContent = (props) => {
     <div className="main-container">
       <div className="tentti-nimi">{props.data.haettuTentti?.tentti.nimi}</div>
       {kysymykset}
-      {/* <h3><Kysymykset kysymykset={kysymykset} vastaukset={props.data.haettuTentti?.vastaukset}/></h3> */}
+      {props.data.valittuTentti > 0 ? (
+        <span className="tallenna-nappula">
+          <button
+            onClick={() =>
+              props.dispatch({
+                type: "PÄIVITÄ_TALLENNUSTILA",
+                payload: true,
+              })
+            }
+          >
+            Tallenna muutokset
+          </button>
+        </span>
+      ) : <div className="tentti-nimi">Ei tenttejä valittuna.</div>}
     </div>
   );
 };

@@ -17,27 +17,44 @@ const NavBar = (props) => {
     });
   };
 
+  const opeMenu = (event) => {
+    console.log("Lisää tentti.", event.target.value);
+    props.dispatch({
+      type: "LISÄÄ_TENTTI",
+      payload: event.target.value,
+    });
+  };
+
   return (
     <>
       <div>
         <nav className="nav">
-          <ul>
-            <select onChange={valitseTentti}>
-              <option disabled selected value>
-                {" "}
-                -- Valitse tentti --{" "}
+          <select onChange={valitseTentti}>
+            <option disabled selected value>
+              {" "}
+              Valitse tentti{" "}
+            </option>
+            {props.listaTentteja?.map((item) => (
+              <option value={item.id} key={item.id}>
+                {item.nimi}
               </option>
-              {props.listaTentteja?.map((item) => (
-                <option value={item.id} key={item.id}>
-                  {item.nimi}
-                </option>
-              ))}
-            </select>
+            ))}
+          </select>
+          <select onChange={opeMenu}>
+            <option disabled selected value>
+              {" "}
+              Työkalut{" "}
+            </option>
+            <option>Lisää tentti</option>
+            <option>Poista tentti</option>
+          </select>
+          <ul>
             <li>Tietoa sovelluksesta</li>
-            <li>
-              <button onClick={signOut}>Poistu</button>
+            <li className="navbar-nappulat" onClick={signOut}>
+              {" "}
+              Poistu
             </li>
-            <li>{showUser}</li>
+            <li className="user">{showUser}</li>
           </ul>
         </nav>
       </div>
