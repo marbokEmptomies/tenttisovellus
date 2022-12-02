@@ -50,10 +50,13 @@ router.post("/", async (req, res) => {
   try {
     const { nimi, päivämäärä, onkovoimassa } = req.body;
     const text =
-      "INSERT INTO tentti (nimi, päivämäärä, onkovoimassa) VALUES ($1, $2, $3)";
+      "INSERT INTO tentti (nimi, päivämäärä, onkovoimassa) VALUES ($1, $2, $3) RETURNING id";
     const values = [nimi, päivämäärä, onkovoimassa];
-    db.query(text, values);
-    res.status(200).send("Uusi tentti lisätty.");
+    const {rows} = await db.query(text, values);
+    res.status(200).send({
+      message:"Uusi tentti lisätty onnistuneesti.",
+      tentin_id: rows[0].id
+    });
   } catch (error) {
     res.status(500).send(error);
     console.log("Tentin lisäämisessä virhe.", error);
@@ -82,7 +85,7 @@ router.delete("/:id", async (req, res) => {
     const text = "DELETE FROM tentti WHERE id=($1)";
     const values = [req.params.id];
     await db.query(text, values);
-    send.status(204).res(`Tentti ID:llä ${req.params.id} poistettu.`);
+    res.status(204).send(`Tentti ID:llä ${req.params.id} poistettu.`);
   } catch (error) {
     res.status(500).send(error);
     console.log("Tentin poistaminen epäonnistui", error.stack);
