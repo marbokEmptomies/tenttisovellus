@@ -19,7 +19,7 @@ const MainContent = (props) => {
     if (props.data.valittuTentti) {
       haeTenttiById(props.data.valittuTentti);
     }
-  }, [props.data.valittuTentti]);
+  }, [props.data.valittuTentti, props.data.tenttiLista]);
 
   // const kysymyksetIlmanReturnia = props.data.haettuTentti?.kysymykset.map(item => <Kysymykset key={item.id} />);
 
