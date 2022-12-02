@@ -4,13 +4,12 @@ import axios from "axios";
 import NavBar from "./NavBar";
 import MainContent from "./MainContent";
 
-
 const appData = {
-    tenttiLista: [], 
-    valittuTentti:"",
-    tallennetaanko: "false",
-    onkoadmin: "false"
-}
+  tenttiLista: [],
+  valittuTentti: "",
+  tallennetaanko: "false",
+  onkoadmin: "false",
+};
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -20,26 +19,40 @@ const reducer = (state, action) => {
     }
 
     case "PÄIVITÄ_TALLENNUSTILA": {
-        console.log("Tallennus tapahtui:", action.payload)
-        return {...state, tallennetaanko: action.payload}
+      console.log("Tallennus tapahtui:", action.payload);
+      return { ...state, tallennetaanko: action.payload };
     }
 
     case "VALITSE_TENTTI": {
-      console.log("Valitse tentti tapahtui.", action.payload);
+      console.log("Valitse tentti tapahtui. Valitun tentin id: ", action.payload);
       return { ...state, valittuTentti: action.payload }; //valittuTentti = tentin id.
     }
 
     case "HAE_TENTTI": {
-        console.log("Haetaan tentti", action.payload)
-        return {...state, haettuTentti: action.payload}
+      console.log("Haetaan tentti", action.payload);
+      return { ...state, haettuTentti: action.payload };
     }
 
     case "LISÄÄ_TENTTI": {
-        console.log("Lisätään tentti", action.payload)
+      console.log("Lisää tentti muuttui", action);
+      return {
+        ...state,
+        tenttiLista: [
+          ...state.tenttiLista,
+          { nimi: action.payload.tenttiData.nimi,
+            id: action.payload.uudenTentinId,
+            onkovoimassa: action.payload.tenttiData.onkovoimassa,
+            päivämäärä: action.payload.tenttiData.päivämäärä },
+        ],
+      };
     }
 
     case "POISTA_TENTTI": {
-        console.log("Poistetaan tentti", action.payload)
+      console.log("Poista tentti muuttui", action);
+      const uudetTentit = state.tenttiLista.filter(
+        (item) => action.payload !== item.id
+      );
+      return { ...state, tenttiLista: uudetTentit };
     }
 
     default:
@@ -68,30 +81,31 @@ const App = (props) => {
   }, []);
 
   useEffect(() => {
-    const vieDataa = async() => {
+    const vieDataa = async () => {
       try {
-        await axios.post('https://localhost:4000/tentit', tentitLista)
+        await axios.post("https://localhost:4000/tentit", tentitLista); // mitä tallennetaan?
         dispatch({
-          type: 'PÄIVITÄ_TALLENNUSTILA',
-          payload: false
-        })
+          type: "PÄIVITÄ_TALLENNUSTILA",
+          payload: false,
+        });
       } catch (error) {
-        console.log("virhetilanne", error)
+        console.log("virhetilanne", error);
       }
+    };
+    if (tentitLista.tallennetaanko === true) {
+      vieDataa();
     }
-    if(tentitLista.tallennetaanko === true){
-      vieDataa()
-    }
-  }, [tentitLista.tallennetaanko])
+  }, [tentitLista.tallennetaanko]);
 
   return (
     <>
       <NavBar
         handleTokenChange={props.handleTokenChange}
         listaTentteja={tentitLista.tenttiLista}
+        valittuTentti={tentitLista.valittuTentti}
         dispatch={dispatch}
       />
-      <MainContent data={tentitLista} dispatch={dispatch}/>
+      <MainContent data={tentitLista} dispatch={dispatch} />
     </>
   );
 };
