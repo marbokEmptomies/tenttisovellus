@@ -1,5 +1,4 @@
 import "./App.css";
-import Vastaukset from "./Vastaukset";
 
 const Kysymykset = (props) => {
   //item => {id: 11, kysymys_id: 26, nimi: 'En osaa sanoa'}
