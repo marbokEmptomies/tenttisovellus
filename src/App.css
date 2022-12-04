@@ -87,8 +87,40 @@ body {
   margin: 0;
 }
 
+.edit-nappula {
+  height:3rem;
+  margin-left: 3rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 1rem;
+  cursor: pointer;
+  box-shadow: transparent 0 0 0 0.1rem,rgba(18, 18, 18, .1) 0 1rem 2rem;
+  box-sizing: border-box;
+  color: black;
+  display: inline-flex;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 1;
+  outline: none;
+  padding: 1.2rem 1.2rem, 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .2s,-webkit-box-shadow .2s;
+  white-space: nowrap;
+  border: 0;
+  touch-action: manipulation;
+}
+
+.edit-nappula:hover {
+  box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;
+}
+
+
 .tallenna-nappula {
   margin-top: 3rem;
+  gap: 1rem;
   display:flex;
   justify-content: center;
 }
@@ -124,11 +156,26 @@ body {
 
 .tentti-nimi {
   display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 2.2rem;
   font-weight: bold;
   background-color: inherit;
   box-shadow: 10px 5px 5px rgb(255, 213, 161);
+}
+
+.tenttinimen-muokkaus {
+  display: flex;
   justify-content: center;
+  align-items: center;
+}
+
+.tenttinimen-muokkaus > input {
+  margin-top: 1rem;
+  font-size: 2.2rem;
+  font-weight: bold;
+  background-color: inherit;
+  box-shadow: 10px 5px 5px rgb(255, 213, 161);
 }
 
 .kysymys-container {

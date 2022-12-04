@@ -1,8 +1,13 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Kysymykset from "./Kysymykset";
 
 const MainContent = (props) => {
+  /* const [editMode, setEditMode] = useState(false);
+    const handleEditMode = (editMode) => {
+        setEditMode(editMode)
+    } */
+
   useEffect(() => {
     const haeTenttiById = async (id) => {
       try {
@@ -21,6 +26,29 @@ const MainContent = (props) => {
     }
   }, [props.data.valittuTentti, props.data.tenttiLista]);
 
+  const lisääKysymys = async (event) => {
+    console.log("Lisää kysymys.", event.target.value);
+    try {
+      const uusKysymys = {
+        tentti_id: props.data.valittuTentti,
+        nimi: "Uusi kysymys",
+        pisteet: "0",
+      };
+      const result = await axios.post(
+        "https://localhost:4000/kysymykset",
+        uusKysymys
+      );
+      console.log("db: kysymyksen lisäys.", result);
+      props.dispatch({
+        type: "LISÄÄ_KYSYMYS",
+        payload: {
+          kysymysData: uusKysymys,
+        },
+      });
+      console.log("Uusi kysymys lisätty db:hen", result);
+    } catch (error) {}
+  };
+
   // const kysymyksetIlmanReturnia = props.data.haettuTentti?.kysymykset.map(item => <Kysymykset key={item.id} />);
 
   // const kysymyksetIlmanReturniaBodylla = props.data.haettuTentti?.kysymykset.map(item => (
@@ -29,7 +57,7 @@ const MainContent = (props) => {
   //   </div>
   // ));
 
-  const kysymykset = props.data.haettuTentti?.kysymykset.map((item) => {
+  const kysymykset = props.data.haettuTentti?.kysymykset?.map((item) => {
     return (
       <Kysymykset
         key={item.id}
@@ -41,12 +69,48 @@ const MainContent = (props) => {
     );
   });
 
+  const onkoEditointiNappiNäkyvissä = props.data.valittuTentti ? (
+    <button
+      className="edit-nappula"
+      onClick={() =>
+        props.dispatch({
+          type: "EDIT_MODE",
+          payload: true,
+        })
+      }
+    >
+      Muokkaa tentin nimeä
+    </button>
+  ) : null;
+
   return (
     <div className="main-container">
-      <div className="tentti-nimi">{props.data.haettuTentti?.tentti.nimi}</div>
+      {/* user-modessa näytetään tämä */}
+      {!props.data.onkoEditMode ? (
+        <div className="tentti-nimi">
+          {props.data.haettuTentti?.tentti?.nimi}
+          {/* admin-modessa näytetään tämä */}
+          {onkoEditointiNappiNäkyvissä}
+        </div>
+      ) : (
+        <div className="tenttinimen-muokkaus">
+          <input
+            type="text"
+            onChange={(event) => {
+              props.dispatch({
+                type: "TENTIN_NIMI_MUUTTUI",
+                payload: {
+                  nimi: event.target.value,
+                },
+              });
+            }}
+            value={props.data.haettuTentti?.tentti.nimi}
+          />
+        </div>
+      )}
       {kysymykset}
       {props.data.valittuTentti > 0 ? (
-        <span className="tallenna-nappula">
+        <div className="tallenna-nappula">
           <button
             onClick={() =>
               props.dispatch({
@@ -57,8 +121,11 @@ const MainContent = (props) => {
           >
             Tallenna muutokset
           </button>
-        </span>
-      ) : <div className="tentti-nimi">Ei tenttejä valittuna.</div>}
+          <button onClick={lisääKysymys}>Lisää kysymys</button>
+        </div>
+      ) : (
+        <div className="tentti-nimi">Ei tenttejä valittuna.</div>
+      )}
     </div>
   );
 };

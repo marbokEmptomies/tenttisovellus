@@ -23,7 +23,7 @@ const Kysymykset = (props) => {
         <div>
             <input type="radio" name={item.kysymys_id} value={item.id}/>
             <span className="vv">{item.nimi}</span>
-            <span className="oikeavastaus"><input type="checkbox" checked={item.onkooikein} /> Oikein.</span>  {/* admin-puolelle */}
+            <span className="oikeavastaus"><input type="checkbox" defaultChecked={item.onkooikein} /> Oikein.</span>  {/* admin-puolelle */}
         </div>
     )
   })

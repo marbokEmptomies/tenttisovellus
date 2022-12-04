@@ -6,9 +6,12 @@ import MainContent from "./MainContent";
 
 const appData = {
   tenttiLista: [],
+  haettuTentti: {},
   valittuTentti: "",
-  tallennetaanko: "false",
-  onkoadmin: "false",
+  kysymykset: [],
+  tallennetaanko: false,
+  onkoEditMode: false,
+  onkoadmin: false,
 };
 
 const reducer = (state, action) => {
@@ -47,12 +50,35 @@ const reducer = (state, action) => {
       };
     }
 
+    case "TENTIN_NIMI_MUUTTUI": {
+        console.log("Tentin nimeä muutettu.", action)
+        const stateKopio = {...state}
+        stateKopio.haettuTentti.tentti.nimi = action.payload.nimi
+        return stateKopio
+    }
+
     case "POISTA_TENTTI": {
       console.log("Poista tentti muuttui", action);
       const uudetTentit = state.tenttiLista.filter(
         (item) => action.payload !== item.id
       );
-      return { ...state, tenttiLista: uudetTentit };
+      return { ...state, tenttiLista: uudetTentit, valittuTentti: "", haettuTentti: {}, kysymykset: [] };
+    }
+
+    case "LISÄÄ_KYSYMYS": {
+        console.log("Lisää kysymys muuttui", action)
+        return {
+            ...state,
+            tenttiLista: [
+              ...state.tenttiLista,
+              { nimi: action.payload.kysymysData.nimi, pisteet: action.payload.kysymysData.pisteet },
+            ],
+          };
+    }
+
+    case "EDIT_MODE": {
+        console.log("Edit mode napsuttunut", action);
+        return {...state, onkoEditMode: action.payload}
     }
 
     default:
