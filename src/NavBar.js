@@ -12,7 +12,7 @@ const NavBar = (props) => {
   const showUser = localStorage.getItem("tenttisov_käyttäjä");
 
   const valitseTentti = (event) => {
-    console.log(event.target.value);
+    console.log("Tentin id:", event.target.value);
     props.dispatch({
       type: "VALITSE_TENTTI",
       payload: event.target.value,
@@ -51,6 +51,7 @@ const NavBar = (props) => {
         
     }
   };
+
   return (
     <>
       <div>

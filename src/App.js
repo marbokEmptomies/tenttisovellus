@@ -27,7 +27,10 @@ const reducer = (state, action) => {
     }
 
     case "VALITSE_TENTTI": {
-      console.log("Valitse tentti tapahtui. Valitun tentin id: ", action.payload);
+      console.log(
+        "Valitse tentti tapahtui. Valitun tentin id: ",
+        action.payload
+      );
       return { ...state, valittuTentti: action.payload }; //valittuTentti = tentin id.
     }
 
@@ -42,19 +45,21 @@ const reducer = (state, action) => {
         ...state,
         tenttiLista: [
           ...state.tenttiLista,
-          { nimi: action.payload.tenttiData.nimi,
+          {
+            nimi: action.payload.tenttiData.nimi,
             id: action.payload.uudenTentinId,
             onkovoimassa: action.payload.tenttiData.onkovoimassa,
-            päivämäärä: action.payload.tenttiData.päivämäärä },
+            päivämäärä: action.payload.tenttiData.päivämäärä,
+          },
         ],
       };
     }
 
     case "TENTIN_NIMI_MUUTTUI": {
-        console.log("Tentin nimeä muutettu.", action)
-        const stateKopio = {...state}
-        stateKopio.haettuTentti.tentti.nimi = action.payload.nimi
-        return stateKopio
+      console.log("Tentin nimeä muutettu.", action);
+      const stateKopio = { ...state };
+      stateKopio.haettuTentti.tentti.nimi = action.payload.nimi;
+      return stateKopio;
     }
 
     case "POISTA_TENTTI": {
@@ -62,23 +67,45 @@ const reducer = (state, action) => {
       const uudetTentit = state.tenttiLista.filter(
         (item) => action.payload !== item.id
       );
-      return { ...state, tenttiLista: uudetTentit, valittuTentti: "", haettuTentti: {}, kysymykset: [] };
+      return {
+        ...state,
+        tenttiLista: uudetTentit,
+        valittuTentti: "",
+        haettuTentti: {},
+      };
     }
 
     case "LISÄÄ_KYSYMYS": {
-        console.log("Lisää kysymys muuttui", action)
-        return {
-            ...state,
-            tenttiLista: [
-              ...state.tenttiLista,
-              { nimi: action.payload.kysymysData.nimi, pisteet: action.payload.kysymysData.pisteet },
-            ],
-          };
+      console.log("Lisää kysymys muuttui", action);
+      return {
+        ...state,
+        haettuTentti: {
+          ...state.haettuTentti,
+          kysymykset: [
+            ...state.haettuTentti.kysymykset,
+            {
+              nimi: `${action.payload.kysymysData.nimi} ${action.payload.kysymyksen_id}`,
+              pisteet: action.payload.kysymysData.pisteet,
+            },
+          ],
+        },
+      };
+    }
+
+    case "POISTA_KYSYMYS": {
+      console.log("Poista kysymys muuttui", action);
+      const uudetKysymykset = state.haettuTentti.kysymykset.filter(
+        (item) => action.payload.kysymys_id !== item.id
+      );
+      return {
+        ...state,
+        haettuTentti: { ...state.haettuTentti, kysymykset: uudetKysymykset },
+      };
     }
 
     case "EDIT_MODE": {
-        console.log("Edit mode napsuttunut", action);
-        return {...state, onkoEditMode: action.payload}
+      console.log("Edit mode napsuttunut", action);
+      return { ...state, onkoEditMode: action.payload };
     }
 
     default:
@@ -88,7 +115,7 @@ const reducer = (state, action) => {
 
 const App = (props) => {
   const [tentitLista, dispatch] = useReducer(reducer, appData);
-  console.log(tentitLista);
+  console.log("Merkki:", tentitLista);
 
   useEffect(() => {
     const haeDataa = async () => {

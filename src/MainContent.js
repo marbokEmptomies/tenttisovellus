@@ -12,7 +12,7 @@ const MainContent = (props) => {
     const haeTenttiById = async (id) => {
       try {
         const result = await axios.get(`https://localhost:4000/tentit/${id}`);
-        console.log("MainContent get", result.data);
+        console.log("Db:stä haettu yksi tentti", result.data);
         props.dispatch({
           type: "HAE_TENTTI",
           payload: result.data,
@@ -29,7 +29,7 @@ const MainContent = (props) => {
   const lisääKysymys = async (event) => {
     console.log("Lisää kysymys.", event.target.value);
     try {
-      const uusKysymys = {
+      const uusKysymys = { 
         tentti_id: props.data.valittuTentti,
         nimi: "Uusi kysymys",
         pisteet: "0",
@@ -43,9 +43,10 @@ const MainContent = (props) => {
         type: "LISÄÄ_KYSYMYS",
         payload: {
           kysymysData: uusKysymys,
+          kysymyksen_id: result.data.kysymyksen_id
         },
       });
-      console.log("Uusi kysymys lisätty db:hen", result);
+      console.log("Uuskysymys", uusKysymys);
     } catch (error) {}
   };
 
@@ -64,6 +65,7 @@ const MainContent = (props) => {
         kysymyksen_id={item.id}
         nimi={item.nimi}
         pisteet={item.pisteet}
+        dispatch={props.dispatch}
         vastaukset={props.data.haettuTentti?.vastaukset}
       />
     );
