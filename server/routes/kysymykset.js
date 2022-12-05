@@ -25,9 +25,10 @@ router.post("/", async (req, res) => {
     const kysymysTenttiinValues = [tentti_id, result.rows[0].id];
     await client.query(kysymysTenttiin, kysymysTenttiinValues);
     await client.query("COMMIT");
-    res
-      .status(200)
-      .send(`Kysymys luotu ja liitetty tenttiin, ID: ${tentti_id}`);
+    res.status(200).send({
+      message: "Kysymys lisätty onnistuneesti tenttiin.",
+      kysymyksen_id: result.rows[0].id,
+    });
   } catch (error) {
     await client.query("ROLLBACK");
     console.log("Virhe kysymyksen luomisessa, ", error);
@@ -61,16 +62,16 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id"),
-  async (req, res) => {
-    try {
-      const text = "DELETE FROM kysymys WHERE id=($1)";
-      const values = [req.params.id];
-      await db.query(text, values);
-      res.send(`Kysymys ID:llä ${req.params.id} poistettu`);
-    } catch (error) {
-      console.log("Kysymyksen poistaminen epäonnistui", error.stack);
-    }
-  };
+router.delete("/:id", async (req, res) => {
+  try {
+    const text = "DELETE FROM kysymys WHERE id=($1)";
+    const values = [req.params.id];
+    await db.query(text, values);
+    res.status(204).send(`Kysymys ID:llä ${req.params.id} poistettu`);
+  } catch (error) {
+    res.status(500).send(error);
+    console.log("Kysymyksen poistaminen epäonnistui", error.stack);
+  }
+});
 
 module.exports = router;
