@@ -29,7 +29,7 @@ const MainContent = (props) => {
   const lisääKysymys = async (event) => {
     console.log("Lisää kysymys.", event.target.value);
     try {
-      const uusKysymys = { 
+      const uusKysymys = {
         tentti_id: props.data.valittuTentti,
         nimi: "Uusi kysymys",
         pisteet: "0",
@@ -43,11 +43,32 @@ const MainContent = (props) => {
         type: "LISÄÄ_KYSYMYS",
         payload: {
           kysymysData: uusKysymys,
-          kysymyksen_id: result.data.kysymyksen_id
+          kysymyksen_id: result.data.kysymyksen_id,
         },
       });
       console.log("Uuskysymys", uusKysymys);
     } catch (error) {}
+  };
+
+  const tallennaTentinNimi = async (id) => {
+    console.log("Tentin nimi tallennettu.");
+    try {
+      const tentinUusiNimi = { uusiNimi: props.data.haettuTentti?.tentti.nimi };
+      const result = await axios.put(
+        `https://localhost:4000/tentit/${id}`,
+        tentinUusiNimi
+      );
+      console.log("Tentin nimi tallennettu db:hen", result.data);
+      props.dispatch({
+        type: "TALLENNA_TENTIN_NIMI",
+        payload: {
+            uusiNimi: tentinUusiNimi.uusiNimi,
+            tentin_id: id
+        }
+      })
+    } catch (error) {
+      console.log("Tentin nimen tallennus epäonnistui.");
+    }
   };
 
   // const kysymyksetIlmanReturnia = props.data.haettuTentti?.kysymykset.map(item => <Kysymykset key={item.id} />);
@@ -108,21 +129,18 @@ const MainContent = (props) => {
             }}
             value={props.data.haettuTentti?.tentti.nimi}
           />
+          <button
+            onClick={() =>
+              tallennaTentinNimi(props.data.haettuTentti.tentti.id)
+            }
+          >
+            Tallenna tentin nimi.
+          </button>
         </div>
       )}
       {kysymykset}
       {props.data.valittuTentti > 0 ? (
         <div className="tallenna-nappula">
-          <button
-            onClick={() =>
-              props.dispatch({
-                type: "PÄIVITÄ_TALLENNUSTILA",
-                payload: true,
-              })
-            }
-          >
-            Tallenna muutokset
-          </button>
           <button onClick={lisääKysymys}>Lisää kysymys</button>
         </div>
       ) : (

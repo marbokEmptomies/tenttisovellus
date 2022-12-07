@@ -21,9 +21,16 @@ const reducer = (state, action) => {
       return { tenttiLista: action.payload };
     }
 
-    case "PÄIVITÄ_TALLENNUSTILA": {
-      console.log("Tallennus tapahtui:", action.payload);
-      return { ...state, tallennetaanko: action.payload };
+    case "TALLENNA_TENTIN_NIMI": {
+      console.log("Tentin nimen tallennus tapahtui:", action);
+      const uusiTenttiLista = state.tenttiLista.map((item) => {
+        if (item.id === action.payload.tentin_id) {
+          return { ...item, nimi: action.payload.uusiNimi };
+        } else {
+          return item;
+        }
+      });
+      return { ...state, tenttiLista: uusiTenttiLista };
     }
 
     case "VALITSE_TENTTI": {
@@ -84,7 +91,8 @@ const reducer = (state, action) => {
           kysymykset: [
             ...state.haettuTentti.kysymykset,
             {
-              nimi: `${action.payload.kysymysData.nimi} ${action.payload.kysymyksen_id}`,
+              id: action.payload.kysymyksen_id,
+              nimi: action.payload.kysymysData.nimi,
               pisteet: action.payload.kysymysData.pisteet,
             },
           ],
@@ -100,6 +108,25 @@ const reducer = (state, action) => {
       return {
         ...state,
         haettuTentti: { ...state.haettuTentti, kysymykset: uudetKysymykset },
+      };
+    }
+
+    case "LISÄÄ_VASTAUS": {
+      console.log("Vastausvaihtoehdon lisääminen muuttui", action);
+      return {
+        ...state,
+        haettuTentti: {
+          ...state.haettuTentti,
+          vastaukset: [
+            ...state.haettuTentti.vastaukset,
+            {
+              kysymys_id: `${action.payload.vastausData.kysymys_id}`,
+              nimi: `${action.payload.vastausData.nimi}`,
+              onkooikein: action.payload.vastausData.onkooikein,
+              id: action.payload.vastauksen_id,
+            },
+          ],
+        },
       };
     }
 
@@ -132,23 +159,6 @@ const App = (props) => {
     };
     haeDataa();
   }, []);
-
-  useEffect(() => {
-    const vieDataa = async () => {
-      try {
-        await axios.post("https://localhost:4000/tentit", tentitLista); // mitä tallennetaan?
-        dispatch({
-          type: "PÄIVITÄ_TALLENNUSTILA",
-          payload: false,
-        });
-      } catch (error) {
-        console.log("virhetilanne", error);
-      }
-    };
-    if (tentitLista.tallennetaanko === true) {
-      vieDataa();
-    }
-  }, [tentitLista.tallennetaanko]);
 
   return (
     <>

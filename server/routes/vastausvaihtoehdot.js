@@ -16,12 +16,13 @@ router.post("/", async (req, res) => {
   try {
     const { kysymys_id, nimi, onkooikein } = req.body;
     const text =
-      "INSERT INTO kysymys (kysymys_id, nimi, onkooikein) VALUES ($1, $2, $3) RETURNING id";
+      "INSERT INTO vastausvaihtoehto (kysymys_id, nimi, onkooikein) VALUES ($1, $2, $3) RETURNING id";
     const result = await db.query(text, [kysymys_id, nimi, onkooikein]);
     res
       .status(200)
-      .send(
-        `Uusi vastausvaihtoehto lisätty kysymykseen: ${kysymys_id}. Vastausvaihtoehdon id on ${result.rows[0].id}`
+      .send({
+        message: `Uusi vastausvaihtoehto lisätty kysymykseen: ${kysymys_id}. Vastausvaihtoehdon id on ${result.rows[0].id}`,
+        vastauksen_id: result.rows[0].id}
       );
   } catch (error) {
     res.status(500).send(error);
