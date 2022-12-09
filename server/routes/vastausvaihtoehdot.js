@@ -48,7 +48,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id"),
+router.delete("/:id",
   async (req, res) => {
     try {
       const text = "DELETE FROM vastausvaihtoehto WHERE id=($1)";
@@ -61,6 +61,6 @@ router.delete("/:id"),
       res.status(500).send(error);
       console.log("Vastausvaihtoehdon poistaminen epäonnistui", error.stack);
     }
-  };
+  });
 
 module.exports = router;

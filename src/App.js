@@ -25,12 +25,17 @@ const reducer = (state, action) => {
       console.log("Tentin nimen tallennus tapahtui:", action);
       const uusiTenttiLista = state.tenttiLista.map((item) => {
         if (item.id === action.payload.tentin_id) {
-          return { ...item, nimi: action.payload.uusiNimi };
+          return { 
+            ...item, 
+            nimi: action.payload.uusiNimi, 
+            päivämäärä: action.payload.uusiPvm, 
+            onkovoimassa: action.payload.uusiVoimassa 
+        };
         } else {
           return item;
         }
       });
-      return { ...state, tenttiLista: uusiTenttiLista };
+      return { ...state, tenttiLista: uusiTenttiLista, onkoEditMode: false };
     }
 
     case "VALITSE_TENTTI": {
@@ -67,6 +72,20 @@ const reducer = (state, action) => {
       const stateKopio = { ...state };
       stateKopio.haettuTentti.tentti.nimi = action.payload.nimi;
       return stateKopio;
+    }
+
+    case "TENTIN_PÄIVÄMÄÄRÄ_MUUTTUI": {
+        console.log("Tentin päivämäärää muutettiin. ", action)
+        const stateKopio = { ...state }
+        stateKopio.haettuTentti.tentti.päivämäärä = action.payload
+        return stateKopio
+    }
+
+    case "TENTIN_VOIMASSAOLO_MUUTTUI": {
+        console.log("Tentin voimassaolo muuttui. ", action)
+        const stateKopio = { ...state }
+        stateKopio.haettuTentti.tentti.onkovoimassa = action.payload
+        return stateKopio
     }
 
     case "POISTA_TENTTI": {
@@ -127,6 +146,17 @@ const reducer = (state, action) => {
             },
           ],
         },
+      };
+    }
+
+    case "POISTA_VASTAUS": {
+      console.log("Poista vastaus muuttui", action);
+      const uudetVastaukset = state.haettuTentti.vastaukset.filter(
+        (item) => action.payload.vastauksen_id !== item.id
+      );
+      return {
+        ...state,
+        haettuTentti: { ...state.haettuTentti, vastaukset: uudetVastaukset },
       };
     }
 

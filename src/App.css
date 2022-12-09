@@ -128,7 +128,7 @@ body {
 .tallenna-nappula > button {
   align-items: center;
   background-color: transparent;
-  max-width: 15%;
+  max-width: 8%;
   border-radius: 1rem;
   box-shadow: transparent 0 0 0 0.1rem,rgba(18, 18, 18, .1) 0 1rem 2rem;
   box-sizing: border-box;
@@ -195,7 +195,7 @@ body {
 
 .trash {
   background-color: transparent;
-  margin-left: 0.2rem;
+  margin-left: .2rem;
   text-align: center;
   text-decoration: none;
   transition: box-shadow .2s,-webkit-box-shadow .2s;
@@ -203,11 +203,46 @@ body {
 }
 
 .trash > img {
-  height: 1.2rem;
-  width: .75rem;
+  height: 1.8rem;
+  width: 1.3rem;
 }
 
 .trash:hover {
+  box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;
+}
+
+.vastaus-nappula {
+  margin-top: 0.2rem;
+  display:flex;
+  justify-content: center;
+}
+
+.vastaus-nappula > button {
+  align-items: center;
+  background-color: transparent;
+  max-width: 8%;
+  border-radius: 1rem;
+  box-shadow: transparent 0 0 0 0.1rem,rgba(18, 18, 18, .1) 0 1rem 2rem;
+  box-sizing: border-box;
+  color: #000000;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 1 1 auto;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 1;
+  margin-bottom: 1rem;
+  outline: none;
+  padding: 1rem 1.2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow .2s,-webkit-box-shadow .2s;
+  white-space: nowrap;
+  border: 0;
+  touch-action: manipulation;
+}
+
+.vastaus-nappula > button:hover {
   box-shadow: #121212 0 0 0 3px, transparent 0 0 0 0;
 }
 

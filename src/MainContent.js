@@ -53,19 +53,24 @@ const MainContent = (props) => {
   const tallennaTentinNimi = async (id) => {
     console.log("Tentin nimi tallennettu.");
     try {
-      const tentinUusiNimi = { uusiNimi: props.data.haettuTentti?.tentti.nimi };
+      const uusiTenttiData = { 
+        uusiNimi: props.data.haettuTentti?.tentti.nimi, 
+        uusiVoimassa: props.data.haettuTentti?.tentti.onkovoimassa,
+        uusiPvm: props.data.haettuTentti?.tentti.päivämäärä };
       const result = await axios.put(
         `https://localhost:4000/tentit/${id}`,
-        tentinUusiNimi
+        uusiTenttiData
       );
       console.log("Tentin nimi tallennettu db:hen", result.data);
       props.dispatch({
         type: "TALLENNA_TENTIN_NIMI",
         payload: {
-            uusiNimi: tentinUusiNimi.uusiNimi,
-            tentin_id: id
-        }
-      })
+          uusiNimi: uusiTenttiData.uusiNimi,
+          uusiVoimassa: uusiTenttiData.uusiVoimassa,
+          uusiPvm: uusiTenttiData.uusiVoimassa,
+          tentin_id: id,
+        },
+      });
     } catch (error) {
       console.log("Tentin nimen tallennus epäonnistui.");
     }
@@ -91,7 +96,6 @@ const MainContent = (props) => {
       />
     );
   });
-
   const onkoEditointiNappiNäkyvissä = props.data.valittuTentti ? (
     <button
       className="edit-nappula"
@@ -102,9 +106,14 @@ const MainContent = (props) => {
         })
       }
     >
-      Muokkaa tentin nimeä
+      Muokkaa
     </button>
   ) : null;
+
+  const newDate = new Date(
+    props.data.haettuTentti?.tentti?.päivämäärä
+  ).toLocaleDateString();
+  
 
   return (
     <div className="main-container">
@@ -129,15 +138,36 @@ const MainContent = (props) => {
             }}
             value={props.data.haettuTentti?.tentti.nimi}
           />
+          <input
+            type="date"
+            defaultValue={new Date(props.data.haettuTentti?.tentti.päivämäärä).toLocaleDateString("en-CA")}
+            onChange={(event) => {
+              props.dispatch({
+                type: "TENTIN_PÄIVÄMÄÄRÄ_MUUTTUI",
+                payload: event.target.value,
+              });
+            }}
+          />
+          <input
+            type="checkbox"
+            defaultChecked={props.data.haettuTentti?.tentti.onkovoimassa}
+            onChange={(event) => {
+              props.dispatch({
+                type: "TENTIN_VOIMASSAOLO_MUUTTUI",
+                payload: event.target.checked,
+              });
+            }}
+          />
           <button
             onClick={() =>
-              tallennaTentinNimi(props.data.haettuTentti.tentti.id)
+              tallennaTentinNimi(props.data.valittuTentti)
             }
           >
-            Tallenna tentin nimi.
+            Tallenna
           </button>
         </div>
       )}
+      {props.data.valittuTentti > 0 ? <small>Tentin päivämäärä: {newDate}</small> : null}
       {kysymykset}
       {props.data.valittuTentti > 0 ? (
         <div className="tallenna-nappula">
