@@ -2,7 +2,7 @@ import "./App.css";
 import axios from "axios";
 import trashcan from "./trash-can-icon.png";
 import edit from "./edit-icon.png";
-import Vastaukset from "./Vastaukset"
+import Vastaukset from "./Vastaukset";
 
 const Kysymykset = (props) => {
   //item => {id: 11, kysymys_id: 26, nimi: 'En osaa sanoa'}
@@ -13,7 +13,7 @@ const Kysymykset = (props) => {
       return item;
     }
   });
-  console.log("filter ", filtervastaukset)
+  console.log("filter ", filtervastaukset);
   //   const vastausvaihtoehdot = filtervastaukset.map(item => {
   //     return (
   //         //Tee jokaisesti itemsti esim. vastauskomponentti?
@@ -61,35 +61,92 @@ const Kysymykset = (props) => {
     }
   };
 
+  const tallennaKysymys = async (id) => {
+    console.log("Kysymyksen nimi tallennettu.");
+    try {
+      const uusiKysymysData = {
+        uusiNimi: props.nimi,
+        uusiPisteet: props.pisteet,
+      };
+      const result = await axios.put(
+        `https://localhost:4000/kysymykset/${id}`,
+        uusiKysymysData
+      );
+      console.log("Kysymys tallennettu db:hen", result.data);
+      props.dispatch({
+        type: "TALLENNA_KYSYMYS",
+        payload: {
+          uusiNimi: uusiKysymysData.uusiNimi,
+          uusiPisteet: uusiKysymysData.uusiPisteet,
+          kysymyksen_id: id,
+        },
+      });
+    } catch (error) {
+      console.log("Kysymyksen tallennus epäonnistui.");
+    }
+  };
+
   const vastausvaihtoehdot = filtervastaukset.map((item) => {
     return (
-        <Vastaukset
-        key = {item.id}
-        vastauksen_id = {item.id}
-        kysymyksen_id = {item.kysymys_id}
-        vastauksen_nimi = {item.nimi}
-        onkooikein = {item.onkooikein}
-        dispatch = {props.dispatch} />
+      <Vastaukset
+        key={item.id}
+        vastauksen_id={item.id}
+        kysymyksen_id={item.kysymys_id}
+        vastauksen_nimi={item.nimi}
+        onkooikein={item.onkooikein}
+        dispatch={props.dispatch}
+      />
     );
   });
-console.log("vastausvaihtoehdot: ", vastausvaihtoehdot)
+
+  const kysymysEditNappula = props.kysymyksen_id ? (
+    <button
+      className="edit-nappula"
+      onClick={() =>
+        props.dispatch({
+          type: "KYSYMYS_EDIT_MODE",
+          payload: true,
+        })
+      }
+    >
+      Muokkaa
+    </button>
+  ) : null;
+
   return (
     <>
       <div className="kysymys-container">
         <div className="kysymykset">
           <h4>
-            {props.nimi}
-            <button
-              className="trash"
-              onClick={() => poistaKysymys(props.kysymyksen_id)}
-            >
-              <img src={trashcan} />
-            </button>
-            <button
-              className="trash"
-            >
-              <img src={edit} />
-            </button>
+            {!props.onkoKysymysEdit ? (
+              <>
+              {props.nimi}
+                <button
+                  className="edit-nappula"
+                  onClick={() => poistaKysymys(props.kysymyksen_id)}
+                >
+                  Poista
+                </button>
+                {kysymysEditNappula}
+              </>
+            ) : (
+              <><input
+                  type="text"
+                  onChange={(event) => {
+                    props.dispatch({
+                      type: "KYSYMYKSEN_NIMI_MUUTTUI",
+                      payload: {
+                        nimi: event.target.value,
+                        kys_index: props.kys_index,
+                      },
+                    });
+                  }}
+                  value={props.nimi}
+                />
+              <button onClick={() => tallennaKysymys(props.kysymyksen_id)}>
+                Tallenna kysymys
+              </button></>
+            )}
           </h4>
           {/* <button className="trash" onClick={() => poistaKysymys(props.kysymyksen_id)}><img src={trashcan} /></button> */}
           <span>

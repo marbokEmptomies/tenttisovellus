@@ -83,6 +83,7 @@ const LoginForm = (props) => {
           <input
             required
             onChange={handleLoginChange}
+            id="login_email"
             type="email"
             name="email"
             value={login.email}
@@ -92,12 +93,13 @@ const LoginForm = (props) => {
           <input
             required
             onChange={handleLoginChange}
+            id="login_pw"
             type="password"
             name="password"
             value={login.password}
             placeholder="Anna salasana."
           />
-            <button>Kirjaudu</button>
+            <button id="login_btn">Kirjaudu</button>
         </form>
 
       <form onSubmit={handleRegister}>
@@ -106,6 +108,7 @@ const LoginForm = (props) => {
         <input
           required
           onChange={handleRegisterChange}
+          id="reg_name"
           type="text"
           name="nimi"
           value={register.name}
@@ -115,6 +118,7 @@ const LoginForm = (props) => {
         <input
           required
           onChange={handleRegisterChange}
+          id="reg_email"
           type="email"
           name="email"
           value={register.email}
@@ -124,6 +128,7 @@ const LoginForm = (props) => {
         <input
           required
           onChange={handleRegisterChange}
+          id="reg_pw"
           type="password"
           name="password"
           value={register.password}
@@ -133,6 +138,7 @@ const LoginForm = (props) => {
         <input
           required
           onChange={handleRegisterChange}
+          id="reg_pw_again"
           type="password"
           name="passwordAgain"
           value={register.passwordAgain}

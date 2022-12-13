@@ -1,12 +1,8 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Kysymykset from "./Kysymykset";
 
 const MainContent = (props) => {
-  /* const [editMode, setEditMode] = useState(false);
-    const handleEditMode = (editMode) => {
-        setEditMode(editMode)
-    } */
 
   useEffect(() => {
     const haeTenttiById = async (id) => {
@@ -53,10 +49,11 @@ const MainContent = (props) => {
   const tallennaTentinNimi = async (id) => {
     console.log("Tentin nimi tallennettu.");
     try {
-      const uusiTenttiData = { 
-        uusiNimi: props.data.haettuTentti?.tentti.nimi, 
+      const uusiTenttiData = {
+        uusiNimi: props.data.haettuTentti?.tentti.nimi,
         uusiVoimassa: props.data.haettuTentti?.tentti.onkovoimassa,
-        uusiPvm: props.data.haettuTentti?.tentti.päivämäärä };
+        uusiPvm: props.data.haettuTentti?.tentti.päivämäärä,
+      };
       const result = await axios.put(
         `https://localhost:4000/tentit/${id}`,
         uusiTenttiData
@@ -83,10 +80,13 @@ const MainContent = (props) => {
   //     <p>item.id</p>
   //   </div>
   // ));
-
-  const kysymykset = props.data.haettuTentti?.kysymykset?.map((item) => {
+console.log("Kys_edit: ", props.data.onkoKysymysEdit)
+  const kysymykset = props.data.haettuTentti?.kysymykset?.map((item, index) => {
     return (
       <Kysymykset
+        kys_index={index}
+        tentin_id={props.data.valittuTentti}
+        onkoKysymysEdit={props.data.onkoKysymysEdit}
         key={item.id}
         kysymyksen_id={item.id}
         nimi={item.nimi}
@@ -113,7 +113,6 @@ const MainContent = (props) => {
   const newDate = new Date(
     props.data.haettuTentti?.tentti?.päivämäärä
   ).toLocaleDateString();
-  
 
   return (
     <div className="main-container">
@@ -140,7 +139,9 @@ const MainContent = (props) => {
           />
           <input
             type="date"
-            defaultValue={new Date(props.data.haettuTentti?.tentti.päivämäärä).toLocaleDateString("en-CA")}
+            defaultValue={new Date(
+              props.data.haettuTentti?.tentti.päivämäärä
+            ).toLocaleDateString("en-CA")}
             onChange={(event) => {
               props.dispatch({
                 type: "TENTIN_PÄIVÄMÄÄRÄ_MUUTTUI",
@@ -158,16 +159,14 @@ const MainContent = (props) => {
               });
             }}
           />
-          <button
-            onClick={() =>
-              tallennaTentinNimi(props.data.valittuTentti)
-            }
-          >
+          <button onClick={() => tallennaTentinNimi(props.data.valittuTentti)}>
             Tallenna
           </button>
         </div>
       )}
-      {props.data.valittuTentti > 0 ? <small>Tentin päivämäärä: {newDate}</small> : null}
+      {props.data.valittuTentti > 0 ? (
+        <small>Tentin päivämäärä: {newDate}</small>
+      ) : null}
       {kysymykset}
       {props.data.valittuTentti > 0 ? (
         <div className="tallenna-nappula">

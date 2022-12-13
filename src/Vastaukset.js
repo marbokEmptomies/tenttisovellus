@@ -26,7 +26,7 @@ const Vastaukset = (props) => {
         <div>
         <input type="radio" name={props.kysymyksen_id} value={props.vastauksen_id} />
         <span className="vv">
-          {props.vastauksen_nimi} <small>{props.vastauksen_id}</small>
+          {props.vastauksen_nimi}
           <button onClick={() => poistaVastausVaihtoehto(props.vastauksen_id)}>Poista vastaus</button>
         </span>
         <span className="oikeavastaus">

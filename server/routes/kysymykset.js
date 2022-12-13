@@ -48,14 +48,14 @@ router.post("/", async (req, res) => {
 }) */
 
 router.put("/:id", async (req, res) => {
-  try {
-    const { uusiTentti_id, uusiNimi, uusiPisteet } = req.body;
+    try {
+    const { uusiNimi, uusiPisteet } = req.body;
     const text =
-      "UPDATE kysymys SET tentti_id = ($1), nimi = ($2), pisteet = ($3) WHERE id = ($4)";
+      "UPDATE kysymys SET nimi = ($1), pisteet = ($2) WHERE id = ($3)";
     console.log(req.body);
-    await db.query(text, [uusiTentti_id, uusiNimi, uusiPisteet, req.params.id]);
+    await db.query(text, [ uusiNimi, uusiPisteet, req.params.id]);
     res.send(
-      `Kysymys muutettu ID:llä ${req.params.id}. Tentin ID: ${uusiTentti_id}`
+      `Kysymys muutettu ID:llä ${req.params.id}.`
     );
   } catch (error) {
     console.log("Kysymyksen muokkaamisessa virhe ", error.stack);

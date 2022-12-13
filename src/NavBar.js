@@ -73,7 +73,7 @@ const NavBar = (props) => {
           </ul>
           <ul>
             <li>Tietoa sovelluksesta</li>
-            <li className="navbar-nappulat" onClick={signOut}>
+            <li className="navbar-nappulat" id="poistu" onClick={signOut}>
               {" "}
               Poistu
             </li>

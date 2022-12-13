@@ -11,6 +11,7 @@ const appData = {
   kysymykset: [],
   tallennetaanko: false,
   onkoEditMode: false,
+  onkoKysymysEdit: false,
   onkoadmin: false,
 };
 
@@ -18,19 +19,19 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "ALUSTA_DATA": {
       console.log("Alusta data: ", action.payload);
-      return { tenttiLista: action.payload };
+      return { tenttiLista: action.payload, onkoKysymysEdit: state.onkoKysymysEdit };
     }
 
     case "TALLENNA_TENTIN_NIMI": {
       console.log("Tentin nimen tallennus tapahtui:", action);
       const uusiTenttiLista = state.tenttiLista.map((item) => {
         if (item.id === action.payload.tentin_id) {
-          return { 
-            ...item, 
-            nimi: action.payload.uusiNimi, 
-            päivämäärä: action.payload.uusiPvm, 
-            onkovoimassa: action.payload.uusiVoimassa 
-        };
+          return {
+            ...item,
+            nimi: action.payload.uusiNimi,
+            päivämäärä: action.payload.uusiPvm,
+            onkovoimassa: action.payload.uusiVoimassa,
+          };
         } else {
           return item;
         }
@@ -75,17 +76,17 @@ const reducer = (state, action) => {
     }
 
     case "TENTIN_PÄIVÄMÄÄRÄ_MUUTTUI": {
-        console.log("Tentin päivämäärää muutettiin. ", action)
-        const stateKopio = { ...state }
-        stateKopio.haettuTentti.tentti.päivämäärä = action.payload
-        return stateKopio
+      console.log("Tentin päivämäärää muutettiin. ", action);
+      const stateKopio = { ...state };
+      stateKopio.haettuTentti.tentti.päivämäärä = action.payload;
+      return stateKopio;
     }
 
     case "TENTIN_VOIMASSAOLO_MUUTTUI": {
-        console.log("Tentin voimassaolo muuttui. ", action)
-        const stateKopio = { ...state }
-        stateKopio.haettuTentti.tentti.onkovoimassa = action.payload
-        return stateKopio
+      console.log("Tentin voimassaolo muuttui. ", action);
+      const stateKopio = { ...state };
+      stateKopio.haettuTentti.tentti.onkovoimassa = action.payload;
+      return stateKopio;
     }
 
     case "POISTA_TENTTI": {
@@ -149,6 +150,33 @@ const reducer = (state, action) => {
       };
     }
 
+    case "KYSYMYKSEN_NIMI_MUUTTUI": {
+      console.log("Kysymyksen nimeä muutettu.", action);
+      const stateKopio = { ...state };
+      stateKopio.haettuTentti.kysymykset[action.payload.kys_index].nimi = action.payload.nimi;
+      return stateKopio;
+    }
+
+    case "TALLENNA_KYSYMYS": {
+      console.log("Kysymyksen tallennus tapahtui:", action);
+      const uusiTenttiLista = state.haettuTentti.kysymykset.map((item) => {
+        if (item.id === action.payload.id) {
+          return {
+            ...item,
+            nimi: action.payload.uusiNimi,
+            pisteet: action.payload.uusiPisteet,
+          };
+        } else {
+          return item;
+        }
+      });
+      return {
+        ...state,
+        uusiTenttiLista,
+        onkoKysymysEdit: false,
+      };
+    }
+
     case "POISTA_VASTAUS": {
       console.log("Poista vastaus muuttui", action);
       const uudetVastaukset = state.haettuTentti.vastaukset.filter(
@@ -163,6 +191,11 @@ const reducer = (state, action) => {
     case "EDIT_MODE": {
       console.log("Edit mode napsuttunut", action);
       return { ...state, onkoEditMode: action.payload };
+    }
+
+    case "KYSYMYS_EDIT_MODE": {
+      console.log("Kysymys-edit mode muuttui", action)
+      return {...state, onkoKysymysEdit: action.payload}
     }
 
     default:
@@ -189,7 +222,6 @@ const App = (props) => {
     };
     haeDataa();
   }, []);
-
   return (
     <>
       <NavBar
