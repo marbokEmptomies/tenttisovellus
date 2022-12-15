@@ -12,6 +12,7 @@ const appData = {
   tallennetaanko: false,
   onkoEditMode: false,
   onkoKysymysEdit: false,
+  onkoVastausEdit: false,
   onkoadmin: false,
 };
 
@@ -19,7 +20,11 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "ALUSTA_DATA": {
       console.log("Alusta data: ", action.payload);
-      return { tenttiLista: action.payload, onkoKysymysEdit: state.onkoKysymysEdit };
+      return {
+        tenttiLista: action.payload,
+        onkoKysymysEdit: state.onkoKysymysEdit,
+        onkoVastausEdit: state.onkoVastausEdit,
+      };
     }
 
     case "TALLENNA_TENTIN_NIMI": {
@@ -153,7 +158,16 @@ const reducer = (state, action) => {
     case "KYSYMYKSEN_NIMI_MUUTTUI": {
       console.log("Kysymyksen nimeä muutettu.", action);
       const stateKopio = { ...state };
-      stateKopio.haettuTentti.kysymykset[action.payload.kys_index].nimi = action.payload.nimi;
+      stateKopio.haettuTentti.kysymykset[action.payload.kys_index].nimi =
+        action.payload.nimi;
+      return stateKopio;
+    }
+
+    case "KYSYMYKSEN_PISTEET_MUUTTUI": {
+      console.log("Kysymyksen pistemäärää muutettu.", action);
+      const stateKopio = { ...state };
+      stateKopio.haettuTentti.kysymykset[action.payload.kys_index].pisteet =
+        action.payload.value;
       return stateKopio;
     }
 
@@ -188,14 +202,74 @@ const reducer = (state, action) => {
       };
     }
 
+    case "VASTAUKSEN_NIMI_MUUTTUI": {
+      console.log("Vastauksen nimeä muutettu.", action);
+      const stateKopio = { ...state };
+      const uudetVastaukset = stateKopio.haettuTentti.vastaukset.map((item) => {
+        if (item.id === action.payload.id) {
+          return { ...item, nimi: action.payload.nimi };
+        } else return item;
+      });
+      return {
+        ...stateKopio,
+        haettuTentti: {
+          ...stateKopio.haettuTentti,
+          vastaukset: uudetVastaukset,
+        },
+      };
+    }
+
+    case "OIKEA_VASTAUS_MUUTTUI": {
+      console.log("Oikea vastaus (dispatch)", action)
+      const stateKopio = { ...state };
+      const uudetVastaukset = stateKopio.haettuTentti.vastaukset.map((item) => {
+        if (item.id === action.payload.id) {
+          return { ...item, onkooikein: action.payload };
+        } else return item;
+      });
+      return {
+        ...stateKopio,
+        haettuTentti: {
+          ...stateKopio.haettuTentti,
+          vastaukset: uudetVastaukset,
+        },
+      };
+    }
+
+    case "TALLENNA_VASTAUS": {
+      console.log("Vastauksen tallennus tapahtui (dispatch):", action);
+      const uusiTenttiLista = state.haettuTentti.vastaukset.map((item) => {
+        if (item.id === action.payload.id) {
+          return {
+            ...item,
+            nimi: action.payload.uusiNimi,
+            kysymys_id: action.payload.uusiKysymys_id,
+            onkooikein: action.payload.uusiOikein,
+          };
+        } else {
+          return item;
+        }
+      });
+      return {
+        ...state,
+        uusiTenttiLista,
+        onkoVastausEdit: false,
+      };
+    }
+
     case "EDIT_MODE": {
       console.log("Edit mode napsuttunut", action);
       return { ...state, onkoEditMode: action.payload };
     }
 
     case "KYSYMYS_EDIT_MODE": {
-      console.log("Kysymys-edit mode muuttui", action)
-      return {...state, onkoKysymysEdit: action.payload}
+      console.log("Kysymys-edit mode muuttui", action);
+      return { ...state, onkoKysymysEdit: action.payload };
+    }
+
+    case "VASTAUS_EDIT_MODE": {
+      console.log("Vastaus-edit mode muuttui", action);
+      return { ...state, onkoVastausEdit: action.payload };
     }
 
     default:

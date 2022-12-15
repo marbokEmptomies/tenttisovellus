@@ -80,13 +80,13 @@ const MainContent = (props) => {
   //     <p>item.id</p>
   //   </div>
   // ));
-console.log("Kys_edit: ", props.data.onkoKysymysEdit)
   const kysymykset = props.data.haettuTentti?.kysymykset?.map((item, index) => {
     return (
       <Kysymykset
         kys_index={index}
         tentin_id={props.data.valittuTentti}
         onkoKysymysEdit={props.data.onkoKysymysEdit}
+        onkoVastausEdit={props.data.onkoVastausEdit}
         key={item.id}
         kysymyksen_id={item.id}
         nimi={item.nimi}
@@ -165,7 +165,7 @@ console.log("Kys_edit: ", props.data.onkoKysymysEdit)
         </div>
       )}
       {props.data.valittuTentti > 0 ? (
-        <small>Tentin päivämäärä: {newDate}</small>
+        <small className="tentti-pvm">Tentin päivämäärä: {newDate}</small>
       ) : null}
       {kysymykset}
       {props.data.valittuTentti > 0 ? (

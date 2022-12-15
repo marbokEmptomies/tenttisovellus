@@ -87,6 +87,13 @@ body {
   margin: 0;
 }
 
+.tentti-pvm {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  font-size: 0.95rem;
+}
+
 .edit-nappula {
   height:3rem;
   margin-left: 1rem;
@@ -183,13 +190,16 @@ body {
   margin-top: 2rem;
   justify-content: space-between;
   background-color: rgb(255, 220, 178);
-  margin-left: 40rem;
-  max-width: 25%;
+  margin-left: 25%;
+  max-width: 50%;
+  border-radius: 2rem;
+  box-shadow: 10px 5px 5px rgb(255, 213, 161);
 }
 
 .kysymykset {
   background-color: inherit;
-  max-width: 100%;
+  align-self: center;
+  margin-left: 25%;
   padding-left: 2rem;
 }
 

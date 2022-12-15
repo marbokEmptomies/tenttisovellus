@@ -1,11 +1,8 @@
 import "./App.css";
 import axios from "axios";
-import trashcan from "./trash-can-icon.png";
-import edit from "./edit-icon.png";
 import Vastaukset from "./Vastaukset";
 
 const Kysymykset = (props) => {
-  //item => {id: 11, kysymys_id: 26, nimi: 'En osaa sanoa'}
 
   // Jos vastauksen kysymys_id on sama kuin kysymyskomponentin id, sisällytä vastaus alla olevaan listaan
   const filtervastaukset = props.vastaukset.filter((item) => {
@@ -13,13 +10,7 @@ const Kysymykset = (props) => {
       return item;
     }
   });
-  console.log("filter ", filtervastaukset);
-  //   const vastausvaihtoehdot = filtervastaukset.map(item => {
-  //     return (
-  //         //Tee jokaisesti itemsti esim. vastauskomponentti?
-  //         <p>{item.nimi}</p>
-  //     )
-  //   })
+
   const poistaKysymys = async (kys_id) => {
     try {
       await axios.delete(`https:localhost:4000/kysymykset/${kys_id}`);
@@ -86,19 +77,20 @@ const Kysymykset = (props) => {
     }
   };
 
-  const vastausvaihtoehdot = filtervastaukset.map((item) => {
+  const vastausvaihtoehdot = filtervastaukset.map((item, index) => {
     return (
       <Vastaukset
         key={item.id}
+        vastaus_index={index}
         vastauksen_id={item.id}
         kysymyksen_id={item.kysymys_id}
-        vastauksen_nimi={item.nimi}
+        nimi={item.nimi}
         onkooikein={item.onkooikein}
+        onkoVastausEdit={props.onkoVastausEdit}
         dispatch={props.dispatch}
       />
     );
   });
-
   const kysymysEditNappula = props.kysymyksen_id ? (
     <button
       className="edit-nappula"
@@ -109,7 +101,7 @@ const Kysymykset = (props) => {
         })
       }
     >
-      Muokkaa
+      Muokkaa kysymystä
     </button>
   ) : null;
 
@@ -120,12 +112,13 @@ const Kysymykset = (props) => {
           <h4>
             {!props.onkoKysymysEdit ? (
               <>
-              {props.nimi}
+              {props.nimi} {props.kysymyksen_id}
+              <p>Pistemäärä: {props.pisteet}</p>
                 <button
                   className="edit-nappula"
                   onClick={() => poistaKysymys(props.kysymyksen_id)}
                 >
-                  Poista
+                  Poista kysymys
                 </button>
                 {kysymysEditNappula}
               </>
@@ -142,6 +135,19 @@ const Kysymykset = (props) => {
                     });
                   }}
                   value={props.nimi}
+                />
+                <input
+                  type="text"
+                  onChange={(event) => {
+                    props.dispatch({
+                      type: "KYSYMYKSEN_PISTEET_MUUTTUI",
+                      payload: {
+                        value: event.target.value,
+                        kys_index: props.kys_index,
+                      },
+                    });
+                  }}
+                  value={props.pisteet}
                 />
               <button onClick={() => tallennaKysymys(props.kysymyksen_id)}>
                 Tallenna kysymys
