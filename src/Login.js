@@ -1,4 +1,6 @@
 import { useState } from "react";
+import useDecodedToken from "./Hooks/useDecodedToken"
+import {Routes, Route, Navigate} from "react-router-dom"
 import App from "./App";
 import LoginForm from "./LoginForm";
 
@@ -9,8 +11,18 @@ const Login = () => {
   const handleTokenChange = (token) => {
     setToken(token);
   };
+  const decodedToken = useDecodedToken()
+  console.log(decodedToken)
+  const validToken = token;
 
-  let component;
+  return (
+    <Routes>
+      <Route index element={<LoginForm handleTokenChange={handleTokenChange} />} />
+      <Route path="home" element={validToken ? <App handleTokenChange={handleTokenChange}/> : <Navigate to="/" />} />
+    </Routes>
+  )
+
+  /* let component;
 
   switch (window.location.pathname) {
     case "/":
@@ -34,7 +46,7 @@ const Login = () => {
         <LoginForm handleTokenChange={handleTokenChange} />
       )}
     </div>
-  );
+  ); */
 };
 
 export default Login;

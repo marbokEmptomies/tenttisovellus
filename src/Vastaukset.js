@@ -1,7 +1,9 @@
 import "./App.css";
 import axios from "axios";
+import useDecodedToken from "./Hooks/useDecodedToken";
 
 const Vastaukset = (props) => {
+  const {onkoadmin} = useDecodedToken()
   console.log("vastaukset-komponentti heräsi.");
   const poistaVastausVaihtoehto = async (vastaus_id) => {
     try {
@@ -65,6 +67,21 @@ const Vastaukset = (props) => {
       Muokkaa vastauksia
     </button>
   ) : null;
+
+  if(!onkoadmin) {
+    return (
+      <div>
+            <input
+              type="radio"
+              name={props.kysymyksen_id}
+              value={props.vastauksen_id}
+            />
+            <span className="vv">
+              {props.nimi} {props.vastauksen_id}
+            </span>
+      </div>
+    );
+  }
 
   return (
     <div>

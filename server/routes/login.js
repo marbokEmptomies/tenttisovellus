@@ -18,10 +18,11 @@ router.post("/", async (req, res, next) => {
       name: result.rows[0].name,
       password: result.rows[0].password,
       email: result.rows[0].email,
+      onkoadmin: result.rows[0].isadmin,
       id: result.rows[0].id,
     };
     passwordMatch = await bcrypt.compare(password, existingUser.password);
-  } catch {
+  } catch(error) {
     console.log(error);
     return next();
   }
@@ -35,7 +36,7 @@ router.post("/", async (req, res, next) => {
   try {
     //Creating jwt token
     token = jwt.sign(
-      { id: existingUser.id, email: existingUser.email },
+      { id: existingUser.id, email: existingUser.email, onkoadmin: existingUser.onkoadmin },
       "secretkeyappearshere", //.env
       { expiresIn: "1h" }
     );

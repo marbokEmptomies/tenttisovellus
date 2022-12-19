@@ -1,9 +1,11 @@
+import {Navigate, useNavigate} from "react-router-dom"
 import { useState } from "react";
 import axios from "axios";
 
 import "./index.css";
 
 const LoginForm = (props) => {
+  const navigate = useNavigate()
   const [login, setLogin] = useState({
     email: "",
     password: "",
@@ -41,6 +43,7 @@ const LoginForm = (props) => {
       if (data.käyttäjä.token) {
         localStorage.setItem("tenttisov_token", data.käyttäjä.token);
         localStorage.setItem("tenttisov_käyttäjä", data.käyttäjä.name);
+        navigate("home")
         props.handleTokenChange(() => data.käyttäjä.token);
       }
     } catch (error) {

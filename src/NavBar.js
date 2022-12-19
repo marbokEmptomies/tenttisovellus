@@ -1,7 +1,10 @@
 import axios from "axios";
+import useDecodedToken from "./Hooks/useDecodedToken";
 import "./App.css";
 
 const NavBar = (props) => {
+
+  const {onkoadmin} = useDecodedToken()
 
   const signOut = () => {
     localStorage.removeItem("tenttisov_token");
@@ -51,7 +54,34 @@ const NavBar = (props) => {
         console.log("Tentin poistaminen epäonnistui.")
     }
   };
-
+  if(!onkoadmin) {
+    return (
+      <>
+        <div>
+          <nav className="nav">
+            <select value={props.valittuTentti || "Default"} onChange={valitseTentti}>
+              <option disabled value="Default">
+                {" "}
+                Valitse tentti{" "}
+              </option>
+              {props.listaTentteja?.map((item) => (
+                <option value={item.id}>
+                  {item.nimi}
+                </option>
+              ))}
+            </select>
+            <ul>
+              <li className="navbar-nappulat" id="poistu" onClick={signOut}>
+                {" "}
+                Poistu
+              </li>
+              <li className="user">{showUser}</li>
+            </ul>
+          </nav>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <div>

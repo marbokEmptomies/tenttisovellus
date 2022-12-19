@@ -1,8 +1,11 @@
 import axios from "axios";
 import { useEffect } from "react";
+import useDecodedToken from "./Hooks/useDecodedToken";
 import Kysymykset from "./Kysymykset";
 
 const MainContent = (props) => {
+
+  const {onkoadmin} = useDecodedToken()
 
   const mapatytPisteet = props.data.haettuTentti?.kysymykset?.map(
     (item) => +item.pisteet
@@ -122,6 +125,24 @@ const MainContent = (props) => {
     props.data.haettuTentti?.tentti?.päivämäärä
   ).toLocaleDateString();
 
+  if(!onkoadmin) {
+    return (
+      <div className="main-container">
+       
+          <div className="tentti-nimi">
+            {props.data.haettuTentti?.tentti?.nimi}
+          </div>
+        {props.data.valittuTentti > 0 ? (
+          <>
+            <small className="tentti-pvm">Tentin päivämäärä: {newDate} - Tentin kokonaispisteet: {tenttipistelaskuri}</small>
+          </>
+        ) : null}
+        {kysymykset}
+        <span className="tallenna-nappula"><button>Lähetä</button></span>
+          {!props.data.valittuTentti > 0 ? <div className="tentti-nimi">Ei tenttejä valittuna.</div> : null}
+      </div>
+    );
+  }
   return (
     <div className="main-container">
       {/* user-modessa näytetään tämä */}

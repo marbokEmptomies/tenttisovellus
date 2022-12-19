@@ -1,8 +1,11 @@
 import "./App.css";
 import axios from "axios";
 import Vastaukset from "./Vastaukset";
+import useDecodedToken from "./Hooks/useDecodedToken";
 
 const Kysymykset = (props) => {
+
+  const {onkoadmin} = useDecodedToken()
 
   // Jos vastauksen kysymys_id on sama kuin kysymyskomponentin id, sisällytä vastaus alla olevaan listaan
   const filtervastaukset = props.vastaukset.filter((item) => {
@@ -104,6 +107,24 @@ const Kysymykset = (props) => {
       Muokkaa kysymystä
     </button>
   ) : null;
+
+  if(!onkoadmin) {
+    return (
+      <>
+        <div className="kysymys-container">
+          <div className="kysymykset">
+            <h4>
+                {props.nimi} {props.kysymyksen_id}
+                <p>Pistemäärä: {props.pisteet}</p>
+            </h4>
+            <span>
+              {vastausvaihtoehdot.length > 0 ? vastausvaihtoehdot : null}
+            </span>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
