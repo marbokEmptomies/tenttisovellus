@@ -4,6 +4,14 @@ import Kysymykset from "./Kysymykset";
 
 const MainContent = (props) => {
 
+  const mapatytPisteet = props.data.haettuTentti?.kysymykset?.map(
+    (item) => +item.pisteet
+  );
+  const tenttipistelaskuri = mapatytPisteet?.reduce(
+    (acc, value) => acc + value,
+    0
+  );
+
   useEffect(() => {
     const haeTenttiById = async (id) => {
       try {
@@ -165,10 +173,12 @@ const MainContent = (props) => {
         </div>
       )}
       {props.data.valittuTentti > 0 ? (
-        <small className="tentti-pvm">Tentin päivämäärä: {newDate}</small>
+        <>
+          <small className="tentti-pvm">Tentin päivämäärä: {newDate} - Tentin kokonaispisteet: {tenttipistelaskuri}</small>
+        </>
       ) : null}
       {kysymykset}
-      {props.data.valittuTentti > 0 ? (
+      {+props.data.haettuTentti?.tentti?.id > 0 ? (
         <div className="tallenna-nappula">
           <button onClick={lisääKysymys}>Lisää kysymys</button>
         </div>

@@ -41,14 +41,14 @@ const NavBar = (props) => {
   const poistaTentti = async() => {
     try {
         const result = await axios.delete(`https:localhost:4000/tentit/${props.valittuTentti}`)
-        console.log("Juu: ", result)
+        console.log(result)
         props.dispatch({
             type: "POISTA_TENTTI",
             payload: props.valittuTentti
           });
         console.log("Tentti poistettu.")
     } catch (error) {
-        
+        console.log("Tentin poistaminen epäonnistui.")
     }
   };
 
@@ -56,13 +56,13 @@ const NavBar = (props) => {
     <>
       <div>
         <nav className="nav">
-          <select onChange={valitseTentti}>
-            <option disabled selected value>
+          <select value={props.valittuTentti || "Default"} onChange={valitseTentti}>
+            <option disabled value="Default">
               {" "}
               Valitse tentti{" "}
             </option>
             {props.listaTentteja?.map((item) => (
-              <option value={item.id} key={item.id}>
+              <option value={item.id}>
                 {item.nimi}
               </option>
             ))}

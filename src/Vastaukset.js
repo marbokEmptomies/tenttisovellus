@@ -2,6 +2,7 @@ import "./App.css";
 import axios from "axios";
 
 const Vastaukset = (props) => {
+  console.log("vastaukset-komponentti heräsi.");
   const poistaVastausVaihtoehto = async (vastaus_id) => {
     try {
       await axios.delete(
@@ -20,11 +21,17 @@ const Vastaukset = (props) => {
   };
   const tallennaVastaukset = async (id) => {
     console.log("Vastauksen nimi tallennettu.");
+    console.log(
+      "VastausData: ",
+      props.kysymyksen_id,
+      props.nimi,
+      props.onkooikein
+    );
     try {
       const uusiVastausData = {
         uusiKysymys_id: props.kysymyksen_id,
         uusiNimi: props.nimi,
-        uusiOikein: props.onkooikein
+        uusiOikein: props.onkooikein,
       };
       const result = await axios.put(
         `https://localhost:4000/vastausvaihtoehdot/${id}`,
@@ -93,19 +100,28 @@ const Vastaukset = (props) => {
                   },
                 });
               }}
-              value={props.nimi}
+              defaultValue={props.nimi}
             />
           </span>
           <span className="oikeavastaus">
-            <input type="checkbox" defaultChecked={props.onkooikein} onClick={(event) => {
-              props.dispatch({
-                type: "OIKEA_VASTAUS_MUUTTUI",
-                payload: event.target.checked,
-                id:props.vastauksen_id
-              })
-            }} /> Oikea vastaus?
+            <input
+              type="checkbox"
+              defaultChecked={props.onkooikein}
+              onChange={(event) => {
+                props.dispatch({
+                  type: "OIKEA_VASTAUS_MUUTTUI",
+                  payload: {
+                    uusiOikein: event.target.checked,
+                    id: props.vastauksen_id,
+                  },
+                });
+              }}
+            />{" "}
+            Oikea vastaus?
           </span>{" "}
-          <button onClick={() => tallennaVastaukset(props.vastauksen_id)}>Tallenna vastaukset</button>
+          <button onClick={() => tallennaVastaukset(props.vastauksen_id)}>
+            Tallenna vastaukset
+          </button>
         </>
       )}
     </div>

@@ -198,9 +198,8 @@ body {
 
 .kysymykset {
   background-color: inherit;
-  align-self: center;
-  margin-left: 25%;
-  padding-left: 2rem;
+  padding: 1rem;
+  margin-left: 10%;
 }
 
 .trash {

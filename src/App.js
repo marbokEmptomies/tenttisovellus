@@ -70,6 +70,17 @@ const reducer = (state, action) => {
             päivämäärä: action.payload.tenttiData.päivämäärä,
           },
         ],
+        haettuTentti: {
+          tentti: {
+            nimi: action.payload.tenttiData.nimi,
+            id: action.payload.uudenTentinId,
+            onkovoimassa: action.payload.tenttiData.onkovoimassa,
+            päivämäärä: action.payload.tenttiData.päivämäärä,
+          },
+          kysymykset: [],
+          vastaukset: [],
+        },
+        valittuTentti: action.payload.uudenTentinId, 
       };
     }
 
@@ -221,12 +232,13 @@ const reducer = (state, action) => {
 
     case "OIKEA_VASTAUS_MUUTTUI": {
       console.log("Oikea vastaus (dispatch)", action)
-      const stateKopio = { ...state };
+      const stateKopio = {...state};
       const uudetVastaukset = stateKopio.haettuTentti.vastaukset.map((item) => {
         if (item.id === action.payload.id) {
-          return { ...item, onkooikein: action.payload };
+          return { ...item, onkooikein: action.payload.uusiOikein };
         } else return item;
       });
+      console.log("Oikeavastauspayload: ", action.payload)
       return {
         ...stateKopio,
         haettuTentti: {
@@ -252,7 +264,7 @@ const reducer = (state, action) => {
       });
       return {
         ...state,
-        uusiTenttiLista,
+        haettuTentti: {...state.haettuTentti, vastaukset: uusiTenttiLista},
         onkoVastausEdit: false,
       };
     }
@@ -279,7 +291,7 @@ const reducer = (state, action) => {
 
 const App = (props) => {
   const [tentitLista, dispatch] = useReducer(reducer, appData);
-  console.log("Merkki:", tentitLista);
+  console.log("State:", tentitLista);
 
   useEffect(() => {
     const haeDataa = async () => {

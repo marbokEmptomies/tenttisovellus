@@ -4,7 +4,7 @@ const db = require("../database");
 
 router.get("/", async (req, res) => {
   try {
-    const result = "SELECT * FROM vastausvaihtoehto ORDER BY id ASC";
+    const result = "SELECT * FROM vastausvaihtoehto";
     const { rows } = await db.query(result);
     res.status(200).send(rows);
   } catch (error) {
@@ -33,6 +33,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const { uusiKysymys_id, uusiNimi, uusiOikein } = req.body;
+    console.log("oikea vastaus-check", uusiOikein)
     const text =
       "UPDATE vastausvaihtoehto SET kysymys_id = ($1), nimi = ($2), onkooikein = ($3) WHERE id = ($4)";
     console.log(req.body);
